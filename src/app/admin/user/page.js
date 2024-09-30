@@ -38,7 +38,6 @@ const UserPage = () => {
         },
       });
       // Update the user list after deletion
-      setUsers(users.filter((user) => user.id !== id));
     } catch (error) {
       console.error(error);
     }
@@ -103,13 +102,13 @@ const UserPage = () => {
                 <td className="py-3 px-6 text-center flex gap-3">
                   <button
                     className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
-                    onClick={() => openEditModal(item)}
+                    onClick={() => openEditModal(item.id_user)}
                   >
                     <CiEdit />
                   </button>
                   <button
                     className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
-                    onClick={() => handleDeleteUser(item)}
+                    onClick={() => handleDeleteUser(item.id_user)}
                   >
                     <AiFillDelete />
                   </button>

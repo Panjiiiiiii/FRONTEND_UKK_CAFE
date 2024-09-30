@@ -8,13 +8,13 @@ const Modal = ({ onClose }) => {
   const token = JSON.parse(dataUser).token;
   // State untuk form
   const [formTable, setFormTable] = useState({
-    nomor_meja: " "
+    nomor_meja: " ",
   });
   console.log(formTable);
   // Use effect untuk mengisi form jika mode edit
-  useEffect(() => {
-    handleSubmit()
-  }, []);
+  // useEffect(() => {
+  //   handleSubmit()
+  // }, []);
 
   // Mengubah nilai form
   const handleChange = (e) => {
@@ -35,7 +35,7 @@ const Modal = ({ onClose }) => {
         },
       });
       console.log(response.data);
-      onClose(); 
+      onClose();
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +55,7 @@ const Modal = ({ onClose }) => {
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-yellow-900 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-              onClick={onClose}
+              onClick={() => onClose()}
             >
               <svg
                 className="w-3 h-3"

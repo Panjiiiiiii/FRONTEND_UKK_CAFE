@@ -25,6 +25,19 @@ const tablePage = () => {
   useEffect(() => {
     getTables();
   }, []);
+
+  const deleteTables = async (id) => {
+    try {
+      const urlDelete = `http://localhost:4000/meja/drop/${id}`;
+      await axios.delete(urlDelete, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div className="p-8">
       <main>
@@ -36,7 +49,7 @@ const tablePage = () => {
           </button>
         </div>
         {showModal && (
-          <Modal/>
+          <Modal onClose={() => setShowModal(false)}/>
         )}
         <table className="w-full mt-5 border-separate">
           <thead>
@@ -57,7 +70,7 @@ const tablePage = () => {
                 <td className="py-3 px-6 text-center flex gap-3">
                   <button
                     className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
-                    onClick={() => handleDeleteUser(item)}
+                    onClick={() => deleteTables(item.id_meja)}
                   >
                     <AiFillDelete />
                   </button>
