@@ -7,13 +7,14 @@ import { IoFastFoodOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { AiFillDelete } from "react-icons/ai";
 import { Button } from "@headlessui/react";
+import Modal from "@/components/ModalMenu";
 
 const menuPage = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [menus, setMenus] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const getMenu = async () => {
@@ -29,6 +30,27 @@ const menuPage = () => {
       console.error(error);
     }
   };
+
+  const handleDeleteMenu = async (id) => {
+    try {
+      const urlDelete = `http://localhost:4000/menu/drop/${id}`;
+      await axios.delete(urlDelete, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Update the user list after deletion
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const openEditModal = (menu) => {
+    setSelectedMenu(menu);
+    setIsEditMode(true);
+    setShowModal(true);
+  };
+
   useEffect(() => {
     getMenu();
   }, []);
@@ -41,13 +63,20 @@ const menuPage = () => {
             onClick={() => {
               setShowModal(true);
               setIsEditMode(false);
-              setSelectedUser(null);
+              setSelectedMenu(null);
             }}
             className="flex items-center bg-green-900 text-white text-md p-3 rounded-md font-bold"
           >
             <IoFastFoodOutline className="mr-3" />
             Add menu
           </button>
+          {showModal && (
+            <Modal
+            onClose={() => setShowModal(false)}
+            menu={selectedMenu}
+            isEdit={isEditMode}
+            />
+          )}
         </div>
         <table className="w-full mt-5 border-separate">
           <thead>
@@ -68,16 +97,27 @@ const menuPage = () => {
                 className="border-b border-gray-200 hover:bg-gray-100"
               >
                 <td className="py-3 px-6 text-center">{item.id_menu}</td>
-                <td className="py-3 px-6 flex justify-center items-center text-center"><img src={`http://localhost:4000/menu/image/${item.gambar}`} className="object-fill w-[50px] h-[50px] block"/></td>
+                <td className="py-3 px-6 flex justify-center items-center text-center">
+                  <img
+                    src={`http://localhost:4000/menu/image/${item.gambar}`}
+                    className="object-fill w-[50px] h-[50px] block"
+                  />
+                </td>
                 <td className="py-3 px-6 text-center">{item.nama_menu}</td>
                 <td className="py-3 px-6 text-center">{item.jenis}</td>
                 <td className="py-3 px-6 text-center">{item.deskripsi}</td>
                 <td className="py-3 px-6 text-center">{item.harga}</td>
                 <td className="py-3 px-6 text-center flex gap-3">
-                  <button className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700">
+                  <button 
+                  className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
+                  onClick={()=> openEditModal(item)}
+                  >
                     <CiEdit />
                   </button>
-                  <button className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700">
+                  <button
+                    className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
+                    onClick={() => handleDeleteMenu(item.id_menu)}
+                  >
                     <AiFillDelete />
                   </button>
                 </td>

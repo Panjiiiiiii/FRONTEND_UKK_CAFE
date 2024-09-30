@@ -11,12 +11,6 @@ const Modal = ({ onClose }) => {
     nomor_meja: " ",
   });
   console.log(formTable);
-  // Use effect untuk mengisi form jika mode edit
-  // useEffect(() => {
-  //   handleSubmit()
-  // }, []);
-
-  // Mengubah nilai form
   const handleChange = (e) => {
     setFormTable({
       ...formTable,
