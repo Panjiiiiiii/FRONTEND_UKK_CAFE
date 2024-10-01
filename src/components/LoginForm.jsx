@@ -21,7 +21,7 @@ const LoginForm = () => {
         if(data.data.role === "MANAJER"){
           window.location.href = '/manager'
         } else if(data.data.role === "KASIR") {
-          window.location.href = '/dashboard/kasir'
+          window.location.href = '/kasir'
         } else {
           window.location.href = '/admin'
         }

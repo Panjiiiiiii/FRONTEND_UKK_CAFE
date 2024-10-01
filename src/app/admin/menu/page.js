@@ -6,7 +6,6 @@ import { getLocalStorage } from "@/lib/localStorage";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { AiFillDelete } from "react-icons/ai";
-import { Button } from "@headlessui/react";
 import Modal from "@/components/ModalMenu";
 
 const menuPage = () => {

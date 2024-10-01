@@ -10,7 +10,6 @@ import {
 import { IoFastFoodOutline } from "react-icons/io5";
 import { IoMdPerson } from "react-icons/io";
 
-
 import "../app/global.css";
 import Link from "next/link";
 
@@ -18,7 +17,7 @@ function SideNavbar({ children }) {
   return (
     <div>
       <div className="flex flex-nowrap">
-        <div className="p-6 w-1/2 h-screen bg-white border-r-2 z-20 top-0 -left-96 lg:left-0 lg:w-60  peer-focus:left-0 peer:transition ease-out delay-150 duration-200">
+        <div className="p-6 w-2/3 h-screen bg-white border-r-2 z-20 top-0 -left-96 lg:left-0 lg:w-60  peer-focus:left-0 peer:transition ease-out delay-150 duration-200">
           <div className="flex flex-col justify-start item-center">
             <h1 className="text-base text-center cursor-pointer font-bold text-gray-950 border-b border-gray-100 pb-4 w-full">
               Welcome Admin !!!

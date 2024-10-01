@@ -6,34 +6,34 @@ import { getLocalStorage } from "@/lib/localStorage";
 const Modal = ({ onClose, menu, isEdit }) => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
-  // State untuk form
+
   const [formMenu, setFormMenu] = useState({
     nama_menu: "",
     jenis: "",
     deskripsi: "",
     harga: "",
-    gambar: "",
   });
-  console.log(formMenu);
-  // Use effect untuk mengisi form jika mode edit
+
+  const [gambar, setGambar] = useState(null);
+
   useEffect(() => {
     if (isEdit && menu) {
       setFormMenu({
         nama_menu: menu.nama_menu || "",
         jenis: menu.jenis || "",
         deskripsi: menu.deskripsi || "",
-        harga: menu.harga || "", 
-        gambar: menu.gambar || "",
+        harga: menu.harga || "",
       });
+      setGambar(null);
     } else {
       setFormMenu({
         nama_menu: "",
         jenis: "",
         deskripsi: "",
         harga: "",
-        gambar: "",
       });
     }
+    setGambar(null);
   }, [isEdit, menu]);
 
   // Mengubah nilai form
@@ -44,18 +44,34 @@ const Modal = ({ onClose, menu, isEdit }) => {
     });
   };
 
+  const handleFile = (e) => {
+    setGambar(e.target.files[0]);
+  };
+  // console.log(gambar)
   // Fungsi untuk mengirim form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+
+    // Append form fields to formData
+    formData.append("nama_menu", formMenu.nama_menu);
+    formData.append("jenis", formMenu.jenis);
+    formData.append("deskripsi", formMenu.deskripsi);
+    formData.append("harga", formMenu.harga);
+
+    if (gambar) {
+      formData.append("gambar", gambar);
+    }
+    console.log(formData)
     try {
       const url = isEdit
-        ? `http://localhost:4000/menu/${menu.id}`
+        ? `http://localhost:4000/menu/${menu.id_menu}`
         : "http://localhost:4000/menu/";
       const method = isEdit ? "put" : "post";
       const response = await axios[method](url, formMenu, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type" : "multipart/form-data",
         },
       });
       console.log(response.data);
@@ -126,12 +142,12 @@ const Modal = ({ onClose, menu, isEdit }) => {
                 </label>
                 <select
                   name="jenis"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mb-4"
                   value={formMenu.jenis}
                   onChange={handleChange}
                 >
                   <option value="" disabled>
-                    Pilih jenis makanan
+                    Pilih kategori
                   </option>
                   <option value="MAKANAN">MAKANAN</option>
                   <option value="MINUMAN">MINUMAN</option>
@@ -172,7 +188,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
                   type="file"
                   name="gambar"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mb-4"
-                  onChange={handleChange}
+                  onChange={handleFile}
                   accept="image/*"
                 />
               </div>

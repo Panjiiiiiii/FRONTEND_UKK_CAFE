@@ -19,7 +19,6 @@ const tablePage = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
     setTables(response.data.data);
   };
   useEffect(() => {

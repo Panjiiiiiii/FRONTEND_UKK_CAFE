@@ -21,7 +21,7 @@ const Modal = ({ onClose, user, isEdit }) => {
       setFormUser({
         nama_user: user.nama_user || "",
         username: user.username || "",
-        email: user.email || "",
+        email: "",
         password: "", // Jangan isi password untuk keamanan
         role: user.role || "",
       });
@@ -49,7 +49,7 @@ const Modal = ({ onClose, user, isEdit }) => {
     e.preventDefault();
     try {
       const url = isEdit
-        ? `http://localhost:4000/user/${user.id}`
+        ? `http://localhost:4000/user/${user.id_user}`
         : "http://localhost:4000/user/";
       const method = isEdit ? "put" : "post";
       const response = await axios[method](url, formUser, {
