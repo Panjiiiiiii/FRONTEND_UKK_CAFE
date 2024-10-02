@@ -12,8 +12,12 @@ import { IoMdPerson } from "react-icons/io";
 
 import "../app/global.css";
 import Link from "next/link";
+import { deleteLocalStorage } from "@/lib/localStorage";
 
 function SideNavbar({ children }) {
+  const handleLogout = () => {
+    const data = deleteLocalStorage('data_user')
+  }
   return (
     <div>
       <div className="flex flex-nowrap">
@@ -66,15 +70,17 @@ function SideNavbar({ children }) {
             <div className=" my-4">
               <div className="flex mb-2 justify-start items-center gap-4 pl-5 border border-gray-200  hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
+                <Link className="text-base text-gray-800 group-hover:text-white font-semibold "
+                onClick={()=> {handleLogout()}}
+                href="/">
                   Logout
-                </h3>
+                </Link>
               </div>
             </div>
           </div>
         </div>
         {/* this is content area */}
-        <div className="p-5">{children}</div>
+        <div className="w-full p-5">{children}</div>
       </div>
     </div>
   );

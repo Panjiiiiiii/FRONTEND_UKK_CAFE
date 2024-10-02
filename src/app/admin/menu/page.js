@@ -106,7 +106,7 @@ const menuPage = () => {
                 <td className="py-3 px-6 text-center">{item.jenis}</td>
                 <td className="py-3 px-6 text-center">{item.deskripsi}</td>
                 <td className="py-3 px-6 text-center">{item.harga}</td>
-                <td className="py-3 px-6 text-center flex gap-3">
+                <td className="py-3 px-6 text-center flex justify-center gap-3">
                   <button 
                   className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
                   onClick={()=> openEditModal(item)}

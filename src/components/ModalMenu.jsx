@@ -58,8 +58,10 @@ const Modal = ({ onClose, menu, isEdit }) => {
     formData.append("jenis", formMenu.jenis);
     formData.append("deskripsi", formMenu.deskripsi);
     formData.append("harga", formMenu.harga);
+    console.log(gambar != null);
+    
 
-    if (gambar) {
+    if (gambar != null) {
       formData.append("gambar", gambar);
     }
     console.log(formData)
@@ -68,7 +70,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
         ? `http://localhost:4000/menu/${menu.id_menu}`
         : "http://localhost:4000/menu/";
       const method = isEdit ? "put" : "post";
-      const response = await axios[method](url, formMenu, {
+      const response = await axios[method](url, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type" : "multipart/form-data",

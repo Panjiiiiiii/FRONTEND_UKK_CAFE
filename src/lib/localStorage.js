@@ -2,4 +2,9 @@ const getLocalStorage = (key) => {
     const data = localStorage.getItem(key)
     return data ?? ""
 }
-export {getLocalStorage}
+
+const deleteLocalStorage = (key) => {
+    const data = localStorage.removeItem(key)
+    return data ?? ""
+}
+export {getLocalStorage, deleteLocalStorage}
