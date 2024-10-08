@@ -1,10 +1,16 @@
 const getLocalStorage = (key) => {
-    const data = localStorage.getItem(key)
-    return data ?? ""
+    if (typeof window !== 'undefined') {
+        const data = localStorage.getItem(key)
+        return data ?? ""
+    }
+    return ""; 
 }
 
 const deleteLocalStorage = (key) => {
-    const data = localStorage.removeItem(key)
-    return data ?? ""
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem(key)
+    }
+    return ""; 
 }
-export {getLocalStorage, deleteLocalStorage}
+
+export { getLocalStorage, deleteLocalStorage }
