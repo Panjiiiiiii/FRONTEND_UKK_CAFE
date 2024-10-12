@@ -16,7 +16,6 @@ import { deleteLocalStorage } from "@/lib/localStorage";
 
 function SideNavbar({ children }) {
   const handleLogout = () => {
-    const data = deleteLocalStorage('data_user')
   }
   return (
     <div>
@@ -24,14 +23,14 @@ function SideNavbar({ children }) {
         <div className="p-6 w-2/3 h-screen bg-white border-r-2 z-20 top-0 -left-96 lg:left-0 lg:w-60  peer-focus:left-0 peer:transition ease-out delay-150 duration-200">
           <div className="flex flex-col justify-start item-center">
             <h1 className="text-base text-center cursor-pointer font-bold text-gray-950 border-b border-gray-100 pb-4 w-full">
-              Welcome Admin !!!
+              Welcome Manajer !!!
             </h1>
             <div className=" my-4 border-b border-gray-100 pb-4">
               <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-yellow-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdDashboard className="text-2xl text-yellow-900 group-hover:text-white " />
                 <Link
                   className="text-base text-yellow-900 group-hover:text-white font-semibold "
-                  href="/admin"
+                  href="/manager"
                 >
                   Dashboard
                 </Link>
@@ -40,27 +39,18 @@ function SideNavbar({ children }) {
                 <IoMdPerson className="text-2xl text-yellow-900 group-hover:text-white " />
                 <Link
                   className="text-base text-yellow-900 group-hover:text-white font-semibold "
-                  href="/admin/user"
+                  href="/manager/kasir"
                 >
-                  Edit user
+                  Cashier recap
                 </Link>
               </div>
               <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-yellow-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdTableRestaurant className="text-2xl text-yellow-900 group-hover:text-white " />
                 <Link
                   className="text-base text-yellow-900 group-hover:text-white font-semibold "
-                  href="/admin/table"
+                  href="/manager/history"
                 >
-                  Edit meja
-                </Link>
-              </div>
-              <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-yellow-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <IoFastFoodOutline className="text-2xl text-yellow-900 group-hover:text-white " />
-                <Link
-                  className="text-base text-yellow-900 group-hover:text-white font-semibold "
-                  href="/admin/menu"
-                >
-                  Edit menu
+                  Order History
                 </Link>
               </div>
             </div>

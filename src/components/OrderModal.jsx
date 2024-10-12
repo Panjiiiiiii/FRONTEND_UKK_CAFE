@@ -105,7 +105,7 @@ const OrderModal = ({ onClose, submitCart }) => {
               onChange={handleChange}
               required
             >
-              <option value="" disabled>
+              <option value="">
                 Pilih nomor meja
               </option>
               {tables.map((table) => (

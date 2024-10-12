@@ -3,9 +3,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import React from "react";
 import { getLocalStorage } from "@/lib/localStorage";
-import { FaCartPlus, FaQuestion } from "react-icons/fa";
+import { FaCartPlus } from "react-icons/fa";
 import Link from "next/link";
-import { MdDelete, MdDetails } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import CartModal from "@/components/CartModal"; // Pastikan CartModal diimport
 
@@ -52,26 +52,34 @@ const Page = () => {
             </button>
           </Link>
         </div>
-        <table className="w-full mt-5 border-separate">
-          <thead>
-            <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-              <th className="py-3 px-6 text-center">ID cart</th>
-              <th className="py-3 px-6 text-center">ID kasir</th>
-              <th className="py-3 px-6 text-center">Nomor meja</th>
-              <th className="py-3 px-6 text-center">Nama Pelanggan</th>
-              <th className="py-3 px-6 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.length > 0 &&
-              cart.map((item) => (
+
+        {/* Jika cart kosong, tampilkan pesan "No item in cart" */}
+        {cart.length === 0 ? (
+          <p className="mt-5 text-center text-2xl text-gray-600 ">
+            No item in cart
+          </p>
+        ) : (
+          <table className="w-full mt-5 border-separate">
+            <thead>
+              <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
+                <th className="py-3 px-6 text-center">ID cart</th>
+                <th className="py-3 px-6 text-center">ID kasir</th>
+                <th className="py-3 px-6 text-center">Nomor meja</th>
+                <th className="py-3 px-6 text-center">Nama Pelanggan</th>
+                <th className="py-3 px-6 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((item) => (
                 <tr
                   key={item.id_cart}
                   className="border-b border-gray-200 hover:bg-gray-100"
                 >
                   <td className="py-3 px-6 text-center">{item.id_cart}</td>
                   <td className="py-3 px-6 text-center">{item.id_user}</td>
-                  <td className="py-3 px-6 text-center">{item.meja.nomor_meja}</td>
+                  <td className="py-3 px-6 text-center">
+                    {item.meja.nomor_meja}
+                  </td>
                   <td className="py-3 px-6 text-center">
                     {item.nama_pelanggan}
                   </td>
@@ -91,9 +99,11 @@ const Page = () => {
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        )}
       </main>
+
       {modal && <CartModal onClose={closeModal} id_cart={selectedCartId} />}
     </div>
   );

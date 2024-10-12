@@ -39,14 +39,13 @@ const page = () => {
   return (
     <div className="p-8">
       <main>
-        <h1 className="text-5xl font-bold">Cart item</h1>
+        <h1 className="text-5xl font-bold">Order History</h1>
         <table className="w-full mt-5 border-separate">
           <thead>
             <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-              <th className="py-3 px-6 text-center">ID transaksi</th>
+              <th className="py-3 px-6 text-center">ID</th>
               <th className="py-3 px-6 text-center">Tanggal transaksi</th>
-              <th className="py-3 px-6 text-center">ID Kasir</th>
-              <th className="py-3 px-6 text-center">ID Meja</th>
+              <th className="py-3 px-6 text-center">Nomor Meja</th>
               <th className="py-3 px-6 text-center">Nama pelanggan</th>
               <th className="py-3 px-6 text-center">Status pembayaran</th>
               <th className="py-3 px-6 text-center">Action</th>
@@ -63,8 +62,7 @@ const page = () => {
                   <td className="py-3 px-6 text-center">
                     {new Date(item.tgl_transaksi).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="py-3 px-6 text-center">{item.id_user}</td>
-                  <td className="py-3 px-6 text-center">{item.id_meja}</td>
+                  <td className="py-3 px-6 text-center">{item.meja.nomor_meja}</td>
                   <td className="py-3 px-6 text-center">
                     {item.nama_pelanggan}
                   </td>
