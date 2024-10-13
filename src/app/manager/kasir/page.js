@@ -59,7 +59,7 @@ const page = () => {
               <p className="text-gray-700 mb-4">
                 Total Transaksi: {item.total_transaksi}
               </p>
-              <Link href={`/kasir/${item.id_user}`}>
+              <Link href={`/manager/kasir/${item.id_user}`}>
                 <button className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-900">
                   Lihat Detail
                 </button>
