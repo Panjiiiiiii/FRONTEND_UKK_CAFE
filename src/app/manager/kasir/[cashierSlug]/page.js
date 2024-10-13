@@ -57,7 +57,7 @@ const CashierDetail = ({ params }) => {
             <th className="px-4 py-2">Nomor Meja</th>
             <th className="px-4 py-2">Tanggal Transaksi</th>
             <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Total Harga</th>
+            <th className="px-4 py-2">Subtotal</th>
           </tr>
         </thead>
         <tbody>
