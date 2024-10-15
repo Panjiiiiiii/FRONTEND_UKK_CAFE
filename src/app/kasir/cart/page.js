@@ -85,7 +85,7 @@ const Page = () => {
                   </td>
                   <td className="py-3 px-6 text-center flex justify-center gap-3">
                     <button
-                      className="bg-yellow-600 text-white py-1 px-3 rounded hover:bg-yellow-700"
+                      className="bg-green-900 text-white py-1 px-3 rounded hover:bg-green-700"
                       onClick={() => openModal(item.id_cart)} // Buka modal ketika diklik
                     >
                       <FaCartPlus />

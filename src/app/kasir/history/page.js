@@ -4,13 +4,16 @@ import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
 import { MdOutlinePayments } from "react-icons/md";
 import StatusModal from "@/components/StatusModal"; // Pastikan Anda menyesuaikan import
+import Pagination from "@/components/Pagination";
 
-const page = () => {
+const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
-  const [order, setOrder] = useState([]);
+  const [orders, setOrders] = useState([]); // Add orders state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(5);
 
   const getOrder = async () => {
     const url = "http://localhost:4000/order/";
@@ -19,12 +22,22 @@ const page = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    setOrder(response.data.data);
+    setOrders(response.data.data);
   };
 
   useEffect(() => {
     getOrder();
   }, []);
+
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const openModal = (orderId) => {
     setSelectedOrderId(orderId);
@@ -52,8 +65,8 @@ const page = () => {
             </tr>
           </thead>
           <tbody>
-            {order.length > 0 &&
-              order.map((item) => (
+            {currentOrders.length > 0 &&
+              currentOrders.map((item) => (
                 <tr
                   key={item.id_cart}
                   className="border-b border-gray-200 hover:bg-gray-100"
@@ -62,7 +75,9 @@ const page = () => {
                   <td className="py-3 px-6 text-center">
                     {new Date(item.tgl_transaksi).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="py-3 px-6 text-center">{item.meja.nomor_meja}</td>
+                  <td className="py-3 px-6 text-center">
+                    {item.meja.nomor_meja}
+                  </td>
                   <td className="py-3 px-6 text-center">
                     {item.nama_pelanggan}
                   </td>
@@ -83,9 +98,15 @@ const page = () => {
         {isModalOpen && (
           <StatusModal id={selectedOrderId} onClose={closeModal} />
         )}
+
+        <Pagination
+          ordersPerPage={ordersPerPage}
+          totalOrders={orders.length}
+          paginate={paginate}
+        />
       </main>
     </div>
   );
 };
 
-export default page;
+export default Page;

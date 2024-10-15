@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
+import downloadPDF from "@/lib/downloadPDF";
 
 const CartModal = ({ onClose, id_cart }) => {
   const dataUser = getLocalStorage(`data_user`);
@@ -39,7 +40,7 @@ const CartModal = ({ onClose, id_cart }) => {
           },
         }
       );
-      if (response.data.status === "Success") {
+      if (response.data.status === "Success") {        
         alert("Order berhasil");
         onClose();
       }
@@ -162,20 +163,25 @@ const CartModal = ({ onClose, id_cart }) => {
               <strong>Total</strong>
               <strong>Rp {totalHarga.toLocaleString()}</strong>
             </div>
-            <hr className="my-4" />
-            <button
-              type="button"
-              className="text-white inline-flex mt-3 items-center bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-              onClick={() => placeOrder(cartId)}
-            >
-              Place order
-            </button>
-            <button
-              type="button"
-              className="text-white inline-flex mt-3 items-center bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-2"
-            >
-              Print Receipt
-            </button>
+            <hr className="my-4 flex" />
+            <div className="flex flex-row gap-4">
+              <button
+                type="button"
+                className="text-white inline-flex mt-3 items-center bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onClick={() => placeOrder(cartId)}
+              >
+                Place order
+                {/* // jika diklik juga akan download struk */}
+              </button>
+              <button
+                type="button"
+                className="text-white inline-flex mt-3 items-center bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onClick={() => downloadPDF(cartId)}
+              >
+                Create receipt
+                {/* // jika diklik juga akan download struk */}
+              </button>
+            </div>
           </div>
         </div>
       </div>
