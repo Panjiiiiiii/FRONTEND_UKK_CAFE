@@ -1,26 +1,39 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MdTableRestaurant } from "react-icons/md";
 import { getLocalStorage } from "@/lib/localStorage";
 import axios from "axios";
 import { AiFillDelete } from "react-icons/ai";
 import Modal from "@/components/ModalTable";
-const tablePage = () => {
+import Pagination from "@/components/Pagination"; // Import Pagination component
+import { Toaster, toast } from "react-hot-toast"; // Import toast
+
+const TablePage = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [tables, setTables] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tablesPerPage] = useState(5); // Set number of tables per page
 
   const getTables = async () => {
-    const urlTables = "http://localhost:4000/meja/";
-    const response = await axios.get(urlTables, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setTables(response.data.data);
+    try {
+      const urlTables = "http://localhost:4000/meja/";
+      const response = await axios.get(urlTables, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTables(response.data.data);
+      toast.success("Data meja berhasil dimuat!"); // Toast on successful load
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal memuat data meja."); // Toast on error
+    }
   };
+
   useEffect(() => {
     getTables();
   }, []);
@@ -33,54 +46,78 @@ const tablePage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      setTables(tables.filter((table) => table.id_meja !== id));
+      toast.success("Meja berhasil dihapus!"); // Toast on successful delete
     } catch (error) {
       console.error(error);
+      toast.error("Gagal menghapus meja."); // Toast on error
     }
-  }
+  };
+
+  // Pagination logic
+  const indexOfLastTable = currentPage * tablesPerPage;
+  const indexOfFirstTable = indexOfLastTable - tablesPerPage;
+  const currentTables = tables.slice(indexOfFirstTable, indexOfLastTable);
+  const totalTables = tables.length; // Total number of tables
+
+  // Function to handle page change
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <div className="p-8">
-      <main>
-        <h1 className="text-5xl font-bold">User Page</h1>
-        <div className="mt-5 justify-end">
-          <button onClick={() => setShowModal(true)} className="flex items-center bg-green-900 text-white text-md p-3 rounded-md font-bold">
+    <div className="min-h-screen flex justify-center items-center">
+      <Toaster />
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-5xl font-bold mb-10 text-gray-800">Table Page</h1>
+        <div className="mt-5 flex justify-end">
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center bg-green-700 hover:bg-green-800 text-white text-md p-3 rounded-md font-bold transition-colors"
+          >
             <MdTableRestaurant className="mr-3" />
             Add Table
           </button>
+          {showModal && (
+            <Modal onClose={() => setShowModal(false)} />
+          )}
         </div>
-        {showModal && (
-          <Modal onClose={() => setShowModal(false)}/>
-        )}
-        <table className="w-full mt-5 border-separate">
-          <thead>
-            <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-              <th className="py-3 px-6 text-center">ID</th>
-              <th className="py-3 px-6 text-center">Meja</th>
-              <th className="py-3 px-6 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-[16px] font-semibold">
-            {tables.map((item) => (
-              <tr
-                key={item}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-3 px-6 text-center">{item.id_meja}</td>
-                <td className="py-3 px-6 text-center">{item.nomor_meja}</td>
-                <td className="py-3 px-6 text-center flex gap-3">
-                  <button
-                    className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
-                    onClick={() => deleteTables(item.id_meja)}
-                  >
-                    <AiFillDelete />
-                  </button>
-                </td>
+        
+        {/* Wrapper for responsive table */}
+        <div className="overflow-x-auto mt-10">
+          <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
+            <thead>
+              <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
+                <th className="py-3 px-6 text-center">ID</th>
+                <th className="py-3 px-6 text-center">Meja</th>
+                <th className="py-3 px-6 text-center">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-gray-600 text-[16px] font-semibold">
+              {currentTables.map((item) => (
+                <tr key={item.id_meja} className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all">
+                  <td className="py-3 px-6 text-center">{item.id_meja}</td>
+                  <td className="py-3 px-6 text-center">{item.nomor_meja}</td>
+                  <td className="py-3 px-6 text-center flex justify-center gap-3">
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors"
+                      onClick={() => deleteTables(item.id_meja)}
+                    >
+                      <AiFillDelete />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <Pagination 
+          ordersPerPage={tablesPerPage} 
+          totalOrders={totalTables} 
+          paginate={paginate} 
+        />
       </main>
     </div>
   );
 };
 
-export default tablePage;
+export default TablePage;

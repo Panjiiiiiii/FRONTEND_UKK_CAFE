@@ -4,36 +4,36 @@ import "../app/global.css";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 
-const LoginForm = ({ isLoad, toggleForgotPassword, toggleRegister }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const RegisterForm = ({ isLoad, toggle }) => {
+  const [register, setRegister] = useState({
+    nama_user: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const [showPassword, setShowPassword] = useState(false);
-  const api = "http://localhost:4000/auth/login";
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRegister((prevRegister) => ({
+      ...prevRegister,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(api, {
-        email,
-        password,
-      });
+      const api = "http://localhost:4000/auth/signup";
+      const response = await axios.post(api, register);
       const data = response.data;
-      console.log(data)
-      if (data.status === "Fail") {
-        toast.error("Login failed your email/password is false"); // Notifikasi error
-      } else {
-        localStorage.setItem("data_user", JSON.stringify(data));
-        toast.success("Login successful!"); // Notifikasi sukses
-        if (data.data.role === "MANAJER") {
-          window.location.href = "/manager";
-        } else if (data.data.role === "KASIR") {
-          window.location.href = "/kasir";
-        } else {
-          window.location.href = "/admin";
-        }
+      if (data) {
+        toast.success("Register sukses!");
+        toggle(!isLoad);
       }
     } catch (error) {
-      toast.error("Login failed. Please check your credentials."); // Notifikasi error
+      toast.error("Register gagal. Silahkan cek kembali data anda.");
     }
   };
 
@@ -64,9 +64,45 @@ const LoginForm = ({ isLoad, toggleForgotPassword, toggleRegister }) => {
               Wikusama Cafe
             </a>
             <h1 className="text-xl font-bold leading-tight tracking-tight text-yellow-900 md:text-2xl">
-              Sign in to your account
+              Make new account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="nama_user"
+                  className="block mb-2 text-sm font-medium text-yellow-900"
+                >
+                  Nama user
+                </label>
+                <input
+                  type="text"
+                  name="nama_user"
+                  id="nama_user"
+                  className="bg-gray-50 border border-gray-300 text-yellow-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 sm:text-base md:text-lg"
+                  placeholder="Nama lengkap"
+                  required
+                  value={register.nama_user}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block mb-2 text-sm font-medium text-yellow-900"
+                >
+                  Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  className="bg-gray-50 border border-gray-300 text-yellow-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 sm:text-base md:text-lg"
+                  placeholder="Username"
+                  required
+                  value={register.username}
+                  onChange={handleChange}
+                />
+              </div>
               <div>
                 <label
                   htmlFor="email"
@@ -81,8 +117,8 @@ const LoginForm = ({ isLoad, toggleForgotPassword, toggleRegister }) => {
                   className="bg-gray-50 border border-gray-300 text-yellow-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 sm:text-base md:text-lg"
                   placeholder="name@company.com"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={register.email}
+                  onChange={handleChange}
                 />
               </div>
               <div>
@@ -99,48 +135,35 @@ const LoginForm = ({ isLoad, toggleForgotPassword, toggleRegister }) => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-yellow-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 sm:text-base md:text-lg"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={register.password}
+                  onChange={handleChange}
                 />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+                <div className="mt-2">
                   <input
                     type="checkbox"
-                    id="show-password"
-                    className="mr-2"
+                    id="showPassword"
                     checked={showPassword}
                     onChange={() => setShowPassword(!showPassword)}
                   />
-                  <label
-                    htmlFor="show-password"
-                    className="text-sm font-medium text-yellow-900"
-                  >
+                  <label htmlFor="showPassword" className="ml-2 text-sm text-yellow-900">
                     Show Password
                   </label>
                 </div>
-                <a
-                  onClick={() => toggleForgotPassword(true)}
-                  href="#"
-                  className="text-sm font-medium text-yellow-900 hover:underline"
-                >
-                  Forgot password?
-                </a>
               </div>
               <button
                 type="submit"
                 className="w-full text-white bg-yellow-900 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center sm:text-base md:text-lg"
               >
-                Sign in
+                Sign up
               </button>
-              <p className="text-sm font-light text-yellow-900 text-center">
-                Don’t have an account yet?{" "}
+              <p className="mt-6 text-sm text-center text-gray-600">
+                Already have an account?{" "}
                 <a
                   href="#"
-                  onClick={() => toggleRegister(true)}
-                  className="font-bold hover:underline"
+                  onClick={() => toggle(!isLoad)}
+                  className="text-yellow-900 font-medium hover:underline"
                 >
-                  Sign up
+                  Sign in
                 </a>
               </p>
             </form>
@@ -151,4 +174,4 @@ const LoginForm = ({ isLoad, toggleForgotPassword, toggleRegister }) => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

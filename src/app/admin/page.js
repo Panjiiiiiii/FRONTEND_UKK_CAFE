@@ -7,12 +7,13 @@ import { getLocalStorage } from "@/lib/localStorage";
 import "../global.css";
 import axios from "axios";
 
-const dashboard = () => {
+const Dashboard = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [user, setUser] = useState([]);
   const [menu, setMenu] = useState([]);
   const [meja, setMeja] = useState([]);
+
   const getUser = async () => {
     try {
       const urlUser = "http://localhost:4000/user/";
@@ -29,6 +30,7 @@ const dashboard = () => {
       console.log(error);
     }
   };
+
   const getMenu = async () => {
     try {
       const urlMenu = "http://localhost:4000/menu/";
@@ -45,6 +47,7 @@ const dashboard = () => {
       console.log(error);
     }
   };
+
   const getTable = async () => {
     try {
       const urlTable = "http://localhost:4000/meja/";
@@ -61,6 +64,7 @@ const dashboard = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getTable();
     getMenu();
@@ -68,37 +72,36 @@ const dashboard = () => {
   }, [token]);
 
   return (
-    <div className="p-8">
-      <main>
-        <h1 className="text-5xl font-bold">Dashboard</h1>
-        <div className="w-full flex flex-row mt-5 gap-5">
-          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-900 p-4 rounded-lg shadow-md text-white flex items-center">
+    <div className="min-h-screen flex justify-center items-center">
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-4xl font-bold mb-5 text-gray-800">Dashboard</h1>
+        <h1 className="text-2xl font-semibold mb-10 text-gray-800">Live data Admin</h1>
+        <div className="flex flex-wrap justify-center gap-5">
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-900 p-6 rounded-xl shadow-lg text-white flex items-center">
             <IoMdPerson className="text-8xl m-3" />
-            <div className="p-10">
-              <h3 className="text-2xl font-thin mb-3">Jumlah user</h3>
+            <div className="p-10 text-left">
+              <h3 className="text-2xl font-light mb-3">Jumlah User</h3>
               <h1 className="text-4xl font-bold">{user.length}</h1>
             </div>
           </div>
-          <div className="bg-yellow-700 p-4 rounded-lg shadow-md text-white flex items-center w-full md:w-1/2 lg:w-1/3">
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-700 p-6 rounded-xl shadow-lg text-white flex items-center">
             <MdTableRestaurant className="text-8xl m-3" />
-            <div className="p-10">
-              <h3 className="text-2xl font-thin mb-3">Jumlah meja</h3>
-              <h3 className="text-4xl font-bold">{meja.length}</h3>
+            <div className="p-10 text-left">
+              <h3 className="text-2xl font-light mb-3">Jumlah Meja</h3>
+              <h1 className="text-4xl font-bold">{meja.length}</h1>
             </div>
           </div>
-          <div className="bg-yellow-600 p-4 rounded-lg shadow-md text-white flex items-center w-full md:w-1/2 lg:w-1/3">
-            <IoFastFoodOutline className="text-8xl m-3"/>
-            <div className="p-10">
-              <h3 className="text-2xl font-thin mb-3">Jumlah menu</h3>
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-600 p-6 rounded-xl shadow-lg text-white flex items-center">
+            <IoFastFoodOutline className="text-8xl m-3" />
+            <div className="p-10 text-left">
+              <h3 className="text-2xl font-light mb-3">Jumlah Menu</h3>
               <h1 className="text-4xl font-bold">{menu.length}</h1>
             </div>
           </div>
         </div>
-        {/* show all username, email, password, role*/}
-        {/* show all menu*/}
       </main>
     </div>
   );
 };
 
-export default dashboard;
+export default Dashboard;

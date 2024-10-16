@@ -1,20 +1,23 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { getLocalStorage } from "@/lib/localStorage";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { AiFillDelete } from "react-icons/ai";
 import Modal from "@/components/ModalMenu";
+import { Toaster, toast } from "react-hot-toast"; // Import toast
+import Pagination from "@/components/Pagination"; // Import Pagination component
 
-const menuPage = () => {
+const MenuPage = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [menus, setMenus] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(5); // Set number of orders per page
 
   const getMenu = async () => {
     try {
@@ -25,8 +28,10 @@ const menuPage = () => {
         },
       });
       setMenus(response.data.data);
+      toast.success("Menu data loaded successfully!"); // Toast on successful load
     } catch (error) {
       console.error(error);
+      toast.error("Failed to load menu data."); // Toast on error
     }
   };
 
@@ -38,9 +43,12 @@ const menuPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // Update the user list after deletion
+      // Update the menu list after deletion
+      setMenus(menus.filter((menu) => menu.id_menu !== id));
+      toast.success("Menu deleted successfully!"); // Toast on successful delete
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete menu."); // Toast on error
     }
   };
 
@@ -50,14 +58,23 @@ const menuPage = () => {
     setShowModal(true);
   };
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   useEffect(() => {
     getMenu();
   }, []);
+
+  // Get current orders
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = menus.slice(indexOfFirstOrder, indexOfLastOrder);
+
   return (
-    <div className="p-8">
-      <main>
-        <h1 className="text-5xl font-bold">Menu Page</h1>
-        <div className="mt-5 justify-end">
+    <div className="min-h-screen flex justify-center items-center">
+      <Toaster /> 
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-5xl font-bold mb-10 text-gray-800">Menu Page</h1>
+        <div className="mt-5 flex justify-end">
           <button
             onClick={() => {
               setShowModal(true);
@@ -67,66 +84,75 @@ const menuPage = () => {
             className="flex items-center bg-green-900 text-white text-md p-3 rounded-md font-bold"
           >
             <IoFastFoodOutline className="mr-3" />
-            Add menu
+            Add Menu
           </button>
           {showModal && (
             <Modal
-            onClose={() => setShowModal(false)}
-            menu={selectedMenu}
-            isEdit={isEditMode}
+              onClose={() => setShowModal(false)}
+              menu={selectedMenu}
+              isEdit={isEditMode}
             />
           )}
         </div>
-        <table className="w-full mt-5 border-separate">
-          <thead>
-            <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-              <th className="py-3 px-6 text-center">ID</th>
-              <th className="py-3 px-6 text-center">Foto menu</th>
-              <th className="py-3 px-6 text-center">Nama menu</th>
-              <th className="py-3 px-6 text-center">Jenis</th>
-              <th className="py-3 px-6 text-center">Deskripsi</th>
-              <th className="py-3 px-6 text-center">Harga</th>
-              <th className="py-3 px-6 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-[16px] font-semibold">
-            {menus.map((item) => (
-              <tr
-                key={item}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-3 px-6 text-center">{item.id_menu}</td>
-                <td className="py-3 px-6 flex justify-center items-center text-center">
-                  <img
-                    src={`http://localhost:4000/menu/image/${item.gambar}`}
-                    className="object-fill w-[50px] h-[50px] block"
-                  />
-                </td>
-                <td className="py-3 px-6 text-center">{item.nama_menu}</td>
-                <td className="py-3 px-6 text-center">{item.jenis}</td>
-                <td className="py-3 px-6 text-center">{item.deskripsi}</td>
-                <td className="py-3 px-6 text-center">{item.harga}</td>
-                <td className="py-3 px-6 text-center flex justify-center gap-3">
-                  <button 
-                  className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
-                  onClick={()=> openEditModal(item)}
-                  >
-                    <CiEdit />
-                  </button>
-                  <button
-                    className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
-                    onClick={() => handleDeleteMenu(item.id_menu)}
-                  >
-                    <AiFillDelete />
-                  </button>
-                </td>
+        {/* Wrap the table in a div for scrolling */}
+        <div className="overflow-x-auto mt-5">
+          <table className="w-full border-separate">
+            <thead>
+              <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
+                <th className="py-3 px-6 text-center">ID</th>
+                <th className="py-3 px-6 text-center">Menu Photo</th>
+                <th className="py-3 px-6 text-center">Menu Name</th>
+                <th className="py-3 px-6 text-center">Type</th>
+                <th className="py-3 px-6 text-center">Description</th>
+                <th className="py-3 px-6 text-center">Price</th>
+                <th className="py-3 px-6 text-center">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-gray-600 text-[16px] font-semibold">
+              {currentOrders.map((item) => (
+                <tr
+                  key={item.id_menu}
+                  className="border-b border-gray-200 hover:bg-gray-100"
+                >
+                  <td className="py-3 px-6 text-center">{item.id_menu}</td>
+                  <td className="py-3 px-6 flex justify-center items-center text-center">
+                    <img
+                      src={`http://localhost:4000/menu/image/${item.gambar}`}
+                      alt={item.nama_menu}
+                      className="object-fill w-[50px] h-[50px] block"
+                    />
+                  </td>
+                  <td className="py-3 px-6 text-center">{item.nama_menu}</td>
+                  <td className="py-3 px-6 text-center">{item.jenis}</td>
+                  <td className="py-3 px-6 text-center">{item.deskripsi}</td>
+                  <td className="py-3 px-6 text-center">{item.harga}</td>
+                  <td className="py-3 px-6 text-center flex justify-center gap-3">
+                    <button 
+                      className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
+                      onClick={() => openEditModal(item)}
+                    >
+                      <CiEdit />
+                    </button>
+                    <button
+                      className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
+                      onClick={() => handleDeleteMenu(item.id_menu)}
+                    >
+                      <AiFillDelete />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <Pagination 
+          ordersPerPage={ordersPerPage} 
+          totalOrders={menus.length} 
+          paginate={paginate} 
+        />
       </main>
     </div>
   );
 };
 
-export default menuPage;
+export default MenuPage;

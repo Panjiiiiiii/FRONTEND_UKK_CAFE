@@ -6,6 +6,7 @@ import { getLocalStorage } from "@/lib/localStorage";
 const Modal = ({ onClose, user, isEdit }) => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
+
   // State untuk form
   const [formUser, setFormUser] = useState({
     nama_user: "",
@@ -14,7 +15,7 @@ const Modal = ({ onClose, user, isEdit }) => {
     password: "",
     role: "",
   });
-  console.log(formUser);
+
   // Use effect untuk mengisi form jika mode edit
   useEffect(() => {
     if (isEdit && user) {
@@ -58,7 +59,7 @@ const Modal = ({ onClose, user, isEdit }) => {
         },
       });
       console.log(response.data);
-      onClose(); 
+      onClose();
     } catch (error) {
       console.error(error);
     }
@@ -105,7 +106,7 @@ const Modal = ({ onClose, user, isEdit }) => {
               <div className="col-span-2">
                 <label
                   htmlFor="nama_user"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Nama User
                 </label>
@@ -120,7 +121,7 @@ const Modal = ({ onClose, user, isEdit }) => {
 
                 <label
                   htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Username
                 </label>
@@ -135,7 +136,7 @@ const Modal = ({ onClose, user, isEdit }) => {
 
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Email
                 </label>
@@ -143,14 +144,14 @@ const Modal = ({ onClose, user, isEdit }) => {
                   type="email"
                   name="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mb-4"
-                  required = ""
+                  required=""
                   value={formUser.email}
                   onChange={handleChange}
                 />
 
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Password
                 </label>
@@ -164,7 +165,7 @@ const Modal = ({ onClose, user, isEdit }) => {
 
                 <label
                   htmlFor="role"
-                  className="block mb-2 text-sm font-medium text-gray-900 mt-3"
+                  className="block mb-2 text-sm font-medium text-gray-900 mt-3 text-left"
                 >
                   Role
                 </label>
@@ -183,12 +184,14 @@ const Modal = ({ onClose, user, isEdit }) => {
                 </select>
               </div>
             </div>
-            <button
-              type="submit"
-              className="text-white inline-flex mt-3 items-center bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              {isEdit ? "Update User" : "Add New User"}
-            </button>
+            <div className="flex justify-start mt-3">
+              <button
+                type="submit"
+                className="text-white inline-flex mt-3 items-end bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              >
+                {isEdit ? "Update User" : "Add New User"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
