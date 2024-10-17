@@ -3,11 +3,15 @@ import React, { useState, useEffect } from "react";
 import { getLocalStorage } from "@/lib/localStorage";
 import axios from "axios";
 import Link from "next/link";
+import Pagination from "@/components/Pagination"; // Ensure Pagination component is imported
+import { BsFillPersonLinesFill } from "react-icons/bs";
 
-const page = () => {
+const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(6); // Adjust orders per page as needed
 
   const getTransaction = async () => {
     const url = "http://localhost:4000/order/";
@@ -43,33 +47,53 @@ const page = () => {
 
   const cashiers = Object.values(groupedByCashier);
 
+  // Pagination logic
+  const indexOfLastCashier = currentPage * ordersPerPage;
+  const indexOfFirstCashier = indexOfLastCashier - ordersPerPage;
+  const currentCashiers = cashiers.slice(indexOfFirstCashier, indexOfLastCashier);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <div className="p-8">
-      <main>
-        <h1 className="text-5xl font-bold mb-6">Histori Kasir</h1>
+    <div className="min-h-screen flex justify-center items-center p-2">
+      <main className="bg-white p-10 rounded-3xl shadow-lg">
+        <h1 className="text-5xl font-bold mb-6 text-center">Histori Kasir</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cashiers.map((item) => (
+          {currentCashiers.map((item) => (
             <div
               key={item.id_user}
               className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow"
             >
-              <h2 className="text-xl font-bold mb-2">{item.nama_user}</h2>
+              <div className="flex items-center mb-4">
+                <BsFillPersonLinesFill className="text-yellow-800 mr-2" size={30} />
+                <h2 className="text-xl font-bold">{item.nama_user}</h2>
+              </div>
               <p className="text-gray-700 mb-2">ID Kasir: {item.id_user}</p>
               <p className="text-gray-700 mb-2">Email: {item.email}</p>
               <p className="text-gray-700 mb-4">
                 Total Transaksi: {item.total_transaksi}
               </p>
               <Link href={`/manager/kasir/${item.id_user}`}>
-                <button className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-900">
+                <button className="bg-yellow-800 text-white py-2 px-4 rounded hover:bg-yellow-900">
                   Lihat Detail
                 </button>
               </Link>
             </div>
           ))}
         </div>
+
+        {/* Pagination Component */}
+        <div className="mt-8">
+          <Pagination
+            ordersPerPage={ordersPerPage}
+            totalOrders={cashiers.length}
+            paginate={paginate}
+            currentPage={currentPage} // Pass current page for pagination
+          />
+        </div>
       </main>
     </div>
   );
 };
 
-export default page;
+export default Page;
