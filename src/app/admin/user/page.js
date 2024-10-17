@@ -7,7 +7,7 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import Modal from "@/components/ModalUser";
 import { CiEdit } from "react-icons/ci";
 import Pagination from "@/components/Pagination"; // import pagination component
-import { Toaster, toast } from "react-hot-toast"; // Import toast
+import toast, { Toaster } from "react-hot-toast"; // Import toast
 
 const UserPage = () => {
   const dataUser = getLocalStorage(`data_user`);
@@ -61,17 +61,36 @@ const UserPage = () => {
     }
   };
 
-  const handleAddOrEditUser = (user) => {
-    if (isEditMode) {
-      // Edit user dalam state tanpa refresh
-      setUsers(users.map((u) => (u.id_user === user.id_user ? user : u)));
-      toast.success("Pengguna berhasil diperbarui!"); // Toast on successful edit
-    } else {
-      // Tambah user baru dalam state tanpa refresh
-      setUsers([...users, user]);
-      toast.success("Pengguna berhasil ditambahkan!"); // Toast on successful add
+  const handleAddOrEditUser = async (user) => {
+    try {
+      if (isEditMode) {
+        // Update user
+        const urlUpdate = `http://localhost:4000/user/update/${user.id_user}`;
+        await axios.put(urlUpdate, user, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // Update user dalam state tanpa refresh
+        setUsers(users.map((u) => (u.id_user === user.id_user ? user : u)));
+        toast.success("Pengguna berhasil diperbarui!"); // Toast on successful edit
+      } else {
+        // Tambah user baru
+        const urlAdd = "http://localhost:4000/user/add";
+        const response = await axios.post(urlAdd, user, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // Tambah user baru dalam state
+        setUsers([...users, response.data.data]);
+        toast.success("Pengguna berhasil ditambahkan!"); // Toast on successful add
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Gagal menyimpan data pengguna."); // Toast on error
     }
-    setShowModal(false);
   };
 
   const openEditModal = (user) => {
@@ -86,7 +105,7 @@ const UserPage = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <Toaster /> 
+      <Toaster position="top-right" reverseOrder={false} /> 
       <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
         <h1 className="text-5xl font-bold mb-10 text-gray-800">User Page</h1>
         <div className="mt-5 flex justify-end">
@@ -159,6 +178,7 @@ const UserPage = () => {
           ordersPerPage={usersPerPage}
           totalOrders={users.length}
           paginate={paginate}
+          currentPage={currentPage} // Pass current page for pagination
         />
       </main>
     </div>

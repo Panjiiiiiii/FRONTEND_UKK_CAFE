@@ -9,13 +9,9 @@ const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [menus, setMenus] = useState([]);
-  const [quantities, setQuantities] = useState({}); // State untuk kuantitas item
-  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk modal
-  const [cartData, setCartData] = useState({
-    id_meja: null,
-    nama_pelanggan: "",
-    items: [],
-  }); // State untuk cart
+  const [quantities, setQuantities] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getMenu = async () => {
     try {
@@ -35,7 +31,6 @@ const Page = () => {
     getMenu();
   }, []);
 
-  // Fungsi untuk menambah atau mengurangi kuantitas item
   const increaseQuantity = (id_menu) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
@@ -50,12 +45,10 @@ const Page = () => {
     }));
   };
 
-  // Cek apakah ada item di keranjang
   const hasItemsInCart = Object.values(quantities).some(
     (quantity) => quantity > 0
   );
 
-  // Fungsi untuk mengirim data pesanan ke API
   const submitCart = async (meja, pelanggan) => {
     const items = Object.entries(quantities)
       .filter(([id_menu, quantity]) => quantity > 0)
@@ -76,7 +69,6 @@ const Page = () => {
       });
       console.log(response.data);
       alert("Pesanan berhasil disimpan!");
-      // Reset state setelah berhasil disimpan
       setQuantities({});
       setIsModalOpen(false);
     } catch (error) {
@@ -86,62 +78,83 @@ const Page = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <main>
-        {/* Section Makanan */}
-        <section className="mb-12">
-          <h2 className="text-4xl font-semibold mb-6 text-gray-800">Makanan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {menus
-              .filter((menu) => menu.jenis === "MAKANAN")
-              .map((menu) => (
-                <CardMenu
-                  key={menu.id_menu}
-                  menu={menu}
-                  quantity={quantities[menu.id_menu] || 0}
-                  increaseQuantity={() => increaseQuantity(menu.id_menu)}
-                  decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
-                />
-              ))}
-          </div>
-        </section>
+    <div className="flex flex-col h-screen">
+      <div className="p-8 bg-gray-100 overflow-y-auto rounded-md flex-grow">
+        <main>
+          <section className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-4xl font-bold text-gray-800">List Menu</h2>
+              <input
+                type="text"
+                placeholder="Search menu..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="px-4 py-2 border rounded-lg"
+              />
+            </div>
 
-        {/* Section Minuman */}
-        <section className="mb-12">
-          <h2 className="text-4xl font-semibold mb-6 text-gray-800">Minuman</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {menus
-              .filter((menu) => menu.jenis === "MINUMAN")
-              .map((menu) => (
-                <CardMenu
-                  key={menu.id_menu}
-                  menu={menu}
-                  quantity={quantities[menu.id_menu] || 0}
-                  increaseQuantity={() => increaseQuantity(menu.id_menu)}
-                  decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
-                />
-              ))}
-          </div>
-        </section>
+            {/* Section Makanan */}
+            <h3 className="text-3xl font-semibold mb-5 text-gray-800">Makanan</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+              {menus
+                .filter(
+                  (menu) =>
+                    menu.jenis === `MAKANAN` &&
+                    menu.nama_menu
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+                )
+                .map((menu) => (
+                  <CardMenu
+                    key={menu.id_menu}
+                    menu={menu}
+                    quantity={quantities[menu.id_menu] || 0}
+                    increaseQuantity={() => increaseQuantity(menu.id_menu)}
+                    decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
+                  />
+                ))}
+            </div>
 
-        {/* Tampilkan tombol jika ada item di keranjang */}
-        {hasItemsInCart && (
-          <div className="fixed bottom-10 right-10">
-            <button
-              className="bg-green-800 text-white px-6 py-3 rounded-lg shadow-lg"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Proceed to Order
-            </button>
-          </div>
-        )}
-      </main>
+            {/* Section Minuman */}
+            <h3 className="text-3xl font-semibold mb-5 text-gray-800">Minuman</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {menus
+                .filter(
+                  (menu) =>
+                    menu.jenis === `MINUMAN` &&
+                    menu.nama_menu
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+                )
+                .map((menu) => (
+                  <CardMenu
+                    key={menu.id_menu}
+                    menu={menu}
+                    quantity={quantities[menu.id_menu] || 0}
+                    increaseQuantity={() => increaseQuantity(menu.id_menu)}
+                    decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
+                  />
+                ))}
+            </div>
+          </section>
 
-      {/* Modal untuk Order */}
+          {hasItemsInCart && (
+            <div className="fixed bottom-10 right-10">
+              <button
+                className="bg-green-800 text-white px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Proceed to Order
+              </button>
+            </div>
+          )}
+        </main>
+      </div>
+
       {isModalOpen && (
         <OrderModal
           onClose={() => setIsModalOpen(false)}
-          submitCart={submitCart} // Tambahkan submitCart ke modal
+          submitCart={submitCart}
         />
       )}
     </div>

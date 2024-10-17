@@ -124,7 +124,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
               <div className="col-span-2">
                 <label
                   htmlFor="nama_menu"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Nama Menu
                 </label>
@@ -138,7 +138,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
                 />
                 <label
                   htmlFor="jenis"
-                  className="block mb-2 text-sm font-medium text-gray-900 mt-3"
+                  className="block mb-2 text-sm font-medium text-gray-900 mt-3 text-left"
                 >
                   Jenis
                 </label>
@@ -156,7 +156,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
                 </select>
                 <label
                   htmlFor="harga"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Harga
                 </label>
@@ -170,7 +170,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
                 />
                 <label
                   htmlFor="deskripsi"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Deskripsi
                 </label>
@@ -182,7 +182,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
                 ></textarea>
                 <label
                   htmlFor="gambar"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium text-gray-900 text-left"
                 >
                   Gambar
                 </label>
@@ -197,7 +197,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
             </div>
             <button
               type="submit"
-              className="text-white inline-flex mt-3 items-center bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="text-white inline-flex mt-3 items-end bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
               {isEdit ? "Update Menu" : "Add New Menu"}
             </button>
