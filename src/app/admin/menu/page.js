@@ -19,6 +19,7 @@ const MenuPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(5); // Set number of orders per page
 
+  // Function to fetch menu data
   const getMenu = async () => {
     try {
       const urlMenu = "http://localhost:4000/menu/";
@@ -27,7 +28,7 @@ const MenuPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setMenus(response.data.data);
+      setMenus(response.data.data); // Set the menu data
       toast.success("Menu data loaded successfully!"); // Toast on successful load
     } catch (error) {
       console.error(error);
@@ -35,6 +36,7 @@ const MenuPage = () => {
     }
   };
 
+  // Function to handle menu deletion
   const handleDeleteMenu = async (id) => {
     try {
       const urlDelete = `http://localhost:4000/menu/drop/${id}`;
@@ -52,19 +54,22 @@ const MenuPage = () => {
     }
   };
 
+  // Function to open modal for editing
   const openEditModal = (menu) => {
     setSelectedMenu(menu);
     setIsEditMode(true);
     setShowModal(true);
   };
 
+  // Pagination function
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Fetch menu data when component mounts
   useEffect(() => {
     getMenu();
   }, []);
 
-  // Get current orders
+  // Get current orders for the current page
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = menus.slice(indexOfFirstOrder, indexOfLastOrder);
@@ -146,6 +151,7 @@ const MenuPage = () => {
           </table>
         </div>
         <Pagination 
+          currentPage={currentPage} // Pass the current page to Pagination component
           ordersPerPage={ordersPerPage} 
           totalOrders={menus.length} 
           paginate={paginate} 

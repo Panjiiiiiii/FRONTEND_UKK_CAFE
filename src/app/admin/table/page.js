@@ -18,6 +18,7 @@ const TablePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [tablesPerPage] = useState(5); // Set number of tables per page
 
+  // Function to fetch table data
   const getTables = async () => {
     try {
       const urlTables = "http://localhost:4000/meja/";
@@ -38,6 +39,7 @@ const TablePage = () => {
     getTables();
   }, []);
 
+  // Function to delete a table
   const deleteTables = async (id) => {
     try {
       const urlDelete = `http://localhost:4000/meja/drop/${id}`;
@@ -60,8 +62,12 @@ const TablePage = () => {
   const currentTables = tables.slice(indexOfFirstTable, indexOfLastTable);
   const totalTables = tables.length; // Total number of tables
 
-  // Function to handle page change
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // Function to handle page change (Next/Previous)
+  const paginate = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= Math.ceil(totalTables / tablesPerPage)) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -110,9 +116,11 @@ const TablePage = () => {
           </table>
         </div>
 
+        {/* Pagination with Previous/Next buttons */}
         <Pagination 
           ordersPerPage={tablesPerPage} 
           totalOrders={totalTables} 
+          currentPage={currentPage} 
           paginate={paginate} 
         />
       </main>

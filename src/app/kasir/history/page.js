@@ -31,10 +31,7 @@ const Page = () => {
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(
-    indexOfFirstOrder,
-    indexOfLastOrder
-  );
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -50,50 +47,54 @@ const Page = () => {
   };
 
   return (
-    <div className="p-8">
-      <main>
-        <h1 className="text-5xl font-bold">Order History</h1>
-        <table className="w-full mt-5 border-separate">
-          <thead>
-            <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-              <th className="py-3 px-6 text-center">ID</th>
-              <th className="py-3 px-6 text-center">Tanggal transaksi</th>
-              <th className="py-3 px-6 text-center">Nomor Meja</th>
-              <th className="py-3 px-6 text-center">Nama pelanggan</th>
-              <th className="py-3 px-6 text-center">Status pembayaran</th>
-              <th className="py-3 px-6 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentOrders.length > 0 &&
-              currentOrders.map((item) => (
-                <tr
-                  key={item.id_cart}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-3 px-6 text-center">{item.id_transaksi}</td>
-                  <td className="py-3 px-6 text-center">
-                    {new Date(item.tgl_transaksi).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="py-3 px-6 text-center">
-                    {item.meja.nomor_meja}
-                  </td>
-                  <td className="py-3 px-6 text-center">
-                    {item.nama_pelanggan}
-                  </td>
-                  <td className="py-3 px-6 text-center">{item.status}</td>
-                  <td className="py-3 px-6 text-center flex justify-center gap-3">
-                    <button
-                      className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 flex items-center gap-2"
-                      onClick={() => openModal(item.id_transaksi)} // Buka modal ketika diklik
-                    >
-                      <MdOutlinePayments />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+    <div className="min-h-screen flex justify-center items-center">
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-5xl font-bold mb-10 text-gray-800">Order History</h1>
+
+        {/* Table container */}
+        <div className="overflow-x-auto mt-5">
+          <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
+            <thead>
+              <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
+                <th className="py-3 px-6 text-center">ID</th>
+                <th className="py-3 px-6 text-center">Tanggal transaksi</th>
+                <th className="py-3 px-6 text-center">Nomor Meja</th>
+                <th className="py-3 px-6 text-center">Nama pelanggan</th>
+                <th className="py-3 px-6 text-center">Status pembayaran</th>
+                <th className="py-3 px-6 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-600 text-[16px] font-semibold">
+              {currentOrders.length > 0 &&
+                currentOrders.map((item) => (
+                  <tr
+                    key={item.id_cart}
+                    className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all"
+                  >
+                    <td className="py-3 px-6 text-center">{item.id_transaksi}</td>
+                    <td className="py-3 px-6 text-center">
+                      {new Date(item.tgl_transaksi).toLocaleDateString("en-GB")}
+                    </td>
+                    <td className="py-3 px-6 text-center">
+                      {item.meja.nomor_meja}
+                    </td>
+                    <td className="py-3 px-6 text-center">
+                      {item.nama_pelanggan}
+                    </td>
+                    <td className="py-3 px-6 text-center">{item.status}</td>
+                    <td className="py-3 px-6 text-center flex justify-center gap-3">
+                      <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition-colors flex items-center gap-2"
+                        onClick={() => openModal(item.id_transaksi)}
+                      >
+                        <MdOutlinePayments />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
 
         {isModalOpen && (
           <StatusModal id={selectedOrderId} onClose={closeModal} />
@@ -103,6 +104,7 @@ const Page = () => {
           ordersPerPage={ordersPerPage}
           totalOrders={orders.length}
           paginate={paginate}
+          currentPage={currentPage} // Pass current page for pagination
         />
       </main>
     </div>
