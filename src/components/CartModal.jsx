@@ -42,6 +42,7 @@ const CartModal = ({ onClose, id_cart }) => {
       );
       if (response.data.status === "Success") {        
         alert("Order berhasil");
+        window.location.reload();
         onClose();
       }
       setLoading(false);

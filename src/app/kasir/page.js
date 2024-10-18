@@ -4,6 +4,7 @@ import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
 import CardMenu from "@/components/CardMenu";
 import OrderModal from "@/components/OrderModal";
+import {Toaster, toast} from "react-hot-toast";
 
 const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
@@ -79,76 +80,83 @@ const Page = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="p-8 bg-gray-100 overflow-y-auto rounded-md flex-grow">
+      <toaster/>
+      <div className="p-8 bg-gray-100 overflow-y-auto rounded-md flex-grow lg:m-10">
         <main>
-          <section className="mb-12">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-4xl font-bold text-gray-800">List Menu</h2>
+          {/* Sticky Header and Search */}
+          <section className="sticky top-0 z-10 bg-white transition-shadow shadow-xl rounded-md mb-12 p-4 md:p-6">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+              {/* Heading */}
+              <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4 md:mb-0">
+                List Menu
+              </h2>
+
+              {/* Search Bar */}
               <input
                 type="text"
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="px-4 py-2 border rounded-lg"
+                className="px-3 py-2 border border-gray-400 rounded-lg w-full md:w-auto"
               />
-            </div>
-
-            {/* Section Makanan */}
-            <h3 className="text-3xl font-semibold mb-5 text-gray-800">Makanan</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {menus
-                .filter(
-                  (menu) =>
-                    menu.jenis === `MAKANAN` &&
-                    menu.nama_menu
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase())
-                )
-                .map((menu) => (
-                  <CardMenu
-                    key={menu.id_menu}
-                    menu={menu}
-                    quantity={quantities[menu.id_menu] || 0}
-                    increaseQuantity={() => increaseQuantity(menu.id_menu)}
-                    decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
-                  />
-                ))}
-            </div>
-
-            {/* Section Minuman */}
-            <h3 className="text-3xl font-semibold mb-5 text-gray-800">Minuman</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {menus
-                .filter(
-                  (menu) =>
-                    menu.jenis === `MINUMAN` &&
-                    menu.nama_menu
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase())
-                )
-                .map((menu) => (
-                  <CardMenu
-                    key={menu.id_menu}
-                    menu={menu}
-                    quantity={quantities[menu.id_menu] || 0}
-                    increaseQuantity={() => increaseQuantity(menu.id_menu)}
-                    decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
-                  />
-                ))}
             </div>
           </section>
 
-          {hasItemsInCart && (
-            <div className="fixed bottom-10 right-10">
-              <button
-                className="bg-green-800 text-white px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105"
-                onClick={() => setIsModalOpen(true)}
-              >
-                Proceed to Order
-              </button>
-            </div>
-          )}
+          {/* Section Makanan */}
+          <h3 className="text-3xl font-semibold mb-5 text-gray-800">Makanan</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {menus
+              .filter(
+                (menu) =>
+                  menu.jenis === `MAKANAN` &&
+                  menu.nama_menu
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
+              )
+              .map((menu) => (
+                <CardMenu
+                  key={menu.id_menu}
+                  menu={menu}
+                  quantity={quantities[menu.id_menu] || 0}
+                  increaseQuantity={() => increaseQuantity(menu.id_menu)}
+                  decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
+                />
+              ))}
+          </div>
+
+          {/* Section Minuman */}
+          <h3 className="text-3xl font-semibold mb-5 text-gray-800">Minuman</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {menus
+              .filter(
+                (menu) =>
+                  menu.jenis === `MINUMAN` &&
+                  menu.nama_menu
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
+              )
+              .map((menu) => (
+                <CardMenu
+                  key={menu.id_menu}
+                  menu={menu}
+                  quantity={quantities[menu.id_menu] || 0}
+                  increaseQuantity={() => increaseQuantity(menu.id_menu)}
+                  decreaseQuantity={() => decreaseQuantity(menu.id_menu)}
+                />
+              ))}
+          </div>
         </main>
+
+        {hasItemsInCart && (
+          <div className="fixed bottom-10 right-10">
+            <button
+              className="bg-green-800 text-white px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Proceed to Order
+            </button>
+          </div>
+        )}
       </div>
 
       {isModalOpen && (

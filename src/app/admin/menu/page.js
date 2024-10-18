@@ -100,9 +100,9 @@ const MenuPage = () => {
           )}
         </div>
 
-        {/* Wrapper for scrolling table */}
-        <div className="flex-grow overflow-x-auto mt-5">
-          <div className="max-h-[300px] overflow-y-auto">
+        {/* Wrapper for the table */}
+        <div className="flex-grow mt-5">
+          <div className="max-h-[400px] overflow-y-auto"> {/* Adjusted height for table */}
             <table className="w-full border-separate">
               <thead>
                 <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
@@ -155,12 +155,14 @@ const MenuPage = () => {
         </div>
 
         {/* Pagination with Previous/Next buttons */}
-        <Pagination 
-          currentPage={currentPage} // Pass the current page to Pagination component
-          ordersPerPage={ordersPerPage} 
-          totalOrders={menus.length} 
-          paginate={paginate} 
-        />
+        {menus.length > ordersPerPage && ( // Only show pagination if necessary
+          <Pagination 
+            currentPage={currentPage} // Pass the current page to Pagination component
+            ordersPerPage={ordersPerPage} 
+            totalOrders={menus.length} 
+            paginate={paginate} 
+          />
+        )}
       </main>
     </div>
   );

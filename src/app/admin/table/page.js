@@ -88,8 +88,8 @@ const TablePage = () => {
         </div>
         
         {/* Wrapper for responsive table */}
-        <div className="flex-grow overflow-x-auto mt-10">
-          <div className="max-h-[300px] overflow-y-auto">
+        <div className="flex-grow overflow-hidden mt-10">
+          <div className="max-h-[400px] overflow-y-hidden"> {/* Adjusted the height to prevent scrolling */}
             <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
               <thead>
                 <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
@@ -119,12 +119,14 @@ const TablePage = () => {
         </div>
 
         {/* Pagination with Previous/Next buttons */}
-        <Pagination 
-          ordersPerPage={tablesPerPage} 
-          totalOrders={totalTables} 
-          currentPage={currentPage} 
-          paginate={paginate} 
-        />
+        {totalTables > tablesPerPage && ( // Only show pagination if necessary
+          <Pagination 
+            ordersPerPage={tablesPerPage} 
+            totalOrders={totalTables} 
+            currentPage={currentPage} 
+            paginate={paginate} 
+          />
+        )}
       </main>
     </div>
   );

@@ -132,48 +132,46 @@ const UserPage = () => {
 
         {/* Wrapper for responsive table */}
         <div className="overflow-x-auto mt-8 flex-grow">
-          <div className="max-h-[300px] overflow-y-auto">
-            <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
-              <thead>
-                <tr className="bg-yellow-900 text-white text-sm md:text-[20px] leading-normal rounded-t-xl">
-                  <th className="py-3 px-2 md:px-6 text-center">ID</th>
-                  <th className="py-3 px-2 md:px-6 text-center">Nama User</th>
-                  <th className="py-3 px-2 md:px-6 text-center">Username</th>
-                  <th className="py-3 px-2 md:px-6 text-center">Email</th>
-                  <th className="py-3 px-2 md:px-6 text-center">Role</th>
-                  <th className="py-3 px-2 md:px-6 text-center">Action</th>
+          <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
+            <thead>
+              <tr className="bg-yellow-900 text-white text-sm md:text-[20px] leading-normal rounded-t-xl">
+                <th className="py-3 px-2 md:px-6 text-center">ID</th>
+                <th className="py-3 px-2 md:px-6 text-center">Nama User</th>
+                <th className="py-3 px-2 md:px-6 text-center">Username</th>
+                <th className="py-3 px-2 md:px-6 text-center">Email</th>
+                <th className="py-3 px-2 md:px-6 text-center">Role</th>
+                <th className="py-3 px-2 md:px-6 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-600 text-[14px] md:text-[16px] font-semibold">
+              {currentUsers.map((item) => (
+                <tr
+                  key={item.id_user}
+                  className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all"
+                >
+                  <td className="py-3 px-2 md:px-6 text-center">{item.id_user}</td>
+                  <td className="py-3 px-2 md:px-6 text-center">{item.nama_user}</td>
+                  <td className="py-3 px-2 md:px-6 text-center">{item.username}</td>
+                  <td className="py-3 px-2 md:px-6 text-center">{item.email}</td>
+                  <td className="py-3 px-2 md:px-6 text-center">{item.role}</td>
+                  <td className="py-3 px-2 md:px-6 text-center flex justify-center gap-2 md:gap-3">
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded transition-colors"
+                      onClick={() => openEditModal(item)}
+                    >
+                      <CiEdit />
+                    </button>
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded transition-colors"
+                      onClick={() => handleDeleteUser(item.id_user)}
+                    >
+                      <AiFillDelete />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="text-gray-600 text-[14px] md:text-[16px] font-semibold">
-                {currentUsers.map((item) => (
-                  <tr
-                    key={item.id_user}
-                    className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all"
-                  >
-                    <td className="py-3 px-2 md:px-6 text-center">{item.id_user}</td>
-                    <td className="py-3 px-2 md:px-6 text-center">{item.nama_user}</td>
-                    <td className="py-3 px-2 md:px-6 text-center">{item.username}</td>
-                    <td className="py-3 px-2 md:px-6 text-center">{item.email}</td>
-                    <td className="py-3 px-2 md:px-6 text-center">{item.role}</td>
-                    <td className="py-3 px-2 md:px-6 text-center flex justify-center gap-2 md:gap-3">
-                      <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded transition-colors"
-                        onClick={() => openEditModal(item)}
-                      >
-                        <CiEdit />
-                      </button>
-                      <button
-                        className="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded transition-colors"
-                        onClick={() => handleDeleteUser(item.id_user)}
-                      >
-                        <AiFillDelete />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         <Pagination

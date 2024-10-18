@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
+import { toast } from "react-hot-toast"; // Import toast
 
 const Modal = ({ onClose, user, isEdit }) => {
   const dataUser = getLocalStorage(`data_user`);
@@ -59,9 +60,11 @@ const Modal = ({ onClose, user, isEdit }) => {
         },
       });
       console.log(response.data);
+      toast.success(isEdit ? "User updated successfully!" : "User added successfully!"); // Success toast
       onClose();
     } catch (error) {
       console.error(error);
+      toast.error("Failed to save user."); // Error toast
     }
   };
 

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
+import {toast} from "react-hot-toast";
 
 const Modal = ({ onClose, menu, isEdit }) => {
   const dataUser = getLocalStorage(`data_user`);
@@ -76,10 +77,10 @@ const Modal = ({ onClose, menu, isEdit }) => {
           "Content-Type" : "multipart/form-data",
         },
       });
-      console.log(response.data);
+      toast.success(isEdit ? "Menu berhasil diupdate!" : "Menu berhasil ditambahkan!");
       onClose();
     } catch (error) {
-      console.error(error);
+      toast.error("Gagal menyimpan data menu.");
     }
   };
 

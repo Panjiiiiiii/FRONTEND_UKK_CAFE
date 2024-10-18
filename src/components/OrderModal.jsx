@@ -21,7 +21,6 @@ const OrderModal = ({ onClose, submitCart }) => {
       },
     });
     setTables(response.data.data);
-    window.location.href = "/kasir/cart";
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
+import { toast } from "react-hot-toast"; 
 
 const Modal = ({ onClose }) => {
   const dataUser = getLocalStorage(`data_user`);
@@ -29,9 +30,11 @@ const Modal = ({ onClose }) => {
         },
       });
       console.log(response.data);
+      toast.success("Meja berhasil ditambahkan!");
       onClose();
     } catch (error) {
       console.error(error);
+      toast.error("Gagal menambahkan meja.");
     }
   };
 
