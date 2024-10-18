@@ -72,7 +72,7 @@ const TablePage = () => {
   return (
     <div className="min-h-screen flex justify-center items-center">
       <Toaster />
-      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl flex flex-col">
         <h1 className="text-5xl font-bold mb-10 text-gray-800">Table Page</h1>
         <div className="mt-5 flex justify-end">
           <button
@@ -88,32 +88,34 @@ const TablePage = () => {
         </div>
         
         {/* Wrapper for responsive table */}
-        <div className="overflow-x-auto mt-10">
-          <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
-            <thead>
-              <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
-                <th className="py-3 px-6 text-center">ID</th>
-                <th className="py-3 px-6 text-center">Meja</th>
-                <th className="py-3 px-6 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-[16px] font-semibold">
-              {currentTables.map((item) => (
-                <tr key={item.id_meja} className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all">
-                  <td className="py-3 px-6 text-center">{item.id_meja}</td>
-                  <td className="py-3 px-6 text-center">{item.nomor_meja}</td>
-                  <td className="py-3 px-6 text-center flex justify-center gap-3">
-                    <button
-                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors"
-                      onClick={() => deleteTables(item.id_meja)}
-                    >
-                      <AiFillDelete />
-                    </button>
-                  </td>
+        <div className="flex-grow overflow-x-auto mt-10">
+          <div className="max-h-[300px] overflow-y-auto">
+            <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
+              <thead>
+                <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
+                  <th className="py-3 px-6 text-center">ID</th>
+                  <th className="py-3 px-6 text-center">Meja</th>
+                  <th className="py-3 px-6 text-center">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-gray-600 text-[16px] font-semibold">
+                {currentTables.map((item) => (
+                  <tr key={item.id_meja} className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all">
+                    <td className="py-3 px-6 text-center">{item.id_meja}</td>
+                    <td className="py-3 px-6 text-center">{item.nomor_meja}</td>
+                    <td className="py-3 px-6 text-center flex justify-center gap-3">
+                      <button
+                        className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors"
+                        onClick={() => deleteTables(item.id_meja)}
+                      >
+                        <AiFillDelete />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pagination with Previous/Next buttons */}

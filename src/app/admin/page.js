@@ -73,29 +73,29 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-4xl font-bold mb-5 text-gray-800">Dashboard</h1>
-        <h1 className="text-2xl font-semibold mb-10 text-gray-800">Live data Admin</h1>
-        <div className="flex flex-wrap justify-center gap-5">
-          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-900 p-6 rounded-xl shadow-lg text-white flex items-center">
-            <IoMdPerson className="text-8xl m-3" />
-            <div className="p-10 text-left">
-              <h3 className="text-2xl font-light mb-3">Jumlah User</h3>
-              <h1 className="text-4xl font-bold">{user.length}</h1>
+      <main className="w-full max-w-6xl text-center bg-white p-5 lg:p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-3xl lg:text-4xl font-bold mb-5 text-gray-800">Dashboard</h1>
+        <h1 className="text-xl lg:text-2xl font-semibold mb-10 text-gray-800">Live data Admin</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="bg-yellow-900 p-6 rounded-xl shadow-lg text-white flex items-center justify-between">
+            <IoMdPerson className="text-4xl lg:text-8xl m-3" />
+            <div className="text-right">
+              <h3 className="text-lg lg:text-2xl font-light mb-3">Jumlah User</h3>
+              <h1 className="text-2xl lg:text-4xl font-bold">{user.length}</h1>
             </div>
           </div>
-          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-700 p-6 rounded-xl shadow-lg text-white flex items-center">
-            <MdTableRestaurant className="text-8xl m-3" />
-            <div className="p-10 text-left">
-              <h3 className="text-2xl font-light mb-3">Jumlah Meja</h3>
-              <h1 className="text-4xl font-bold">{meja.length}</h1>
+          <div className="bg-yellow-700 p-6 rounded-xl shadow-lg text-white flex items-center justify-between">
+            <MdTableRestaurant className="text-4xl lg:text-8xl m-3" />
+            <div className="text-right">
+              <h3 className="text-lg lg:text-2xl font-light mb-3">Jumlah Meja</h3>
+              <h1 className="text-2xl lg:text-4xl font-bold">{meja.length}</h1>
             </div>
           </div>
-          <div className="w-full md:w-1/2 lg:w-1/3 bg-yellow-600 p-6 rounded-xl shadow-lg text-white flex items-center">
-            <IoFastFoodOutline className="text-8xl m-3" />
-            <div className="p-10 text-left">
-              <h3 className="text-2xl font-light mb-3">Jumlah Menu</h3>
-              <h1 className="text-4xl font-bold">{menu.length}</h1>
+          <div className="bg-yellow-600 p-6 rounded-xl shadow-lg text-white flex items-center justify-between">
+            <IoFastFoodOutline className="text-4xl lg:text-8xl m-3" />
+            <div className="text-right">
+              <h3 className="text-lg lg:text-2xl font-light mb-3">Jumlah Menu</h3>
+              <h1 className="text-2xl lg:text-4xl font-bold">{menu.length}</h1>
             </div>
           </div>
         </div>

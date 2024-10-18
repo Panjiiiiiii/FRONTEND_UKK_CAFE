@@ -77,7 +77,7 @@ const MenuPage = () => {
   return (
     <div className="min-h-screen flex justify-center items-center">
       <Toaster /> 
-      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
+      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl flex flex-col">
         <h1 className="text-5xl font-bold mb-10 text-gray-800">Menu Page</h1>
         <div className="mt-5 flex justify-end">
           <button
@@ -99,57 +99,62 @@ const MenuPage = () => {
             />
           )}
         </div>
-        {/* Wrap the table in a div for scrolling */}
-        <div className="overflow-x-auto mt-5">
-          <table className="w-full border-separate">
-            <thead>
-              <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
-                <th className="py-3 px-6 text-center">ID</th>
-                <th className="py-3 px-6 text-center">Menu Photo</th>
-                <th className="py-3 px-6 text-center">Menu Name</th>
-                <th className="py-3 px-6 text-center">Type</th>
-                <th className="py-3 px-6 text-center">Description</th>
-                <th className="py-3 px-6 text-center">Price</th>
-                <th className="py-3 px-6 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-[16px] font-semibold">
-              {currentOrders.map((item) => (
-                <tr
-                  key={item.id_menu}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-3 px-6 text-center">{item.id_menu}</td>
-                  <td className="py-3 px-6 flex justify-center items-center text-center">
-                    <img
-                      src={`http://localhost:4000/menu/image/${item.gambar}`}
-                      alt={item.nama_menu}
-                      className="object-fill w-[50px] h-[50px] block"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-center">{item.nama_menu}</td>
-                  <td className="py-3 px-6 text-center">{item.jenis}</td>
-                  <td className="py-3 px-6 text-center">{item.deskripsi}</td>
-                  <td className="py-3 px-6 text-center">{item.harga}</td>
-                  <td className="py-3 px-6 text-center flex justify-center gap-3">
-                    <button 
-                      className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
-                      onClick={() => openEditModal(item)}
-                    >
-                      <CiEdit />
-                    </button>
-                    <button
-                      className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
-                      onClick={() => handleDeleteMenu(item.id_menu)}
-                    >
-                      <AiFillDelete />
-                    </button>
-                  </td>
+
+        {/* Wrapper for scrolling table */}
+        <div className="flex-grow overflow-x-auto mt-5">
+          <div className="max-h-[300px] overflow-y-auto">
+            <table className="w-full border-separate">
+              <thead>
+                <tr className="bg-yellow-900 text-white text-[20px] leading-normal">
+                  <th className="py-3 px-6 text-center">ID</th>
+                  <th className="py-3 px-6 text-center">Menu Photo</th>
+                  <th className="py-3 px-6 text-center">Menu Name</th>
+                  <th className="py-3 px-6 text-center">Type</th>
+                  <th className="py-3 px-6 text-center">Description</th>
+                  <th className="py-3 px-6 text-center">Price</th>
+                  <th className="py-3 px-6 text-center">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-gray-600 text-[16px] font-semibold">
+                {currentOrders.map((item) => (
+                  <tr
+                    key={item.id_menu}
+                    className="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td className="py-3 px-6 text-center">{item.id_menu}</td>
+                    <td className="py-3 px-6 flex justify-center items-center text-center">
+                      <img
+                        src={`http://localhost:4000/menu/image/${item.gambar}`}
+                        alt={item.nama_menu}
+                        className="object-fill w-[50px] h-[50px] block"
+                      />
+                    </td>
+                    <td className="py-3 px-6 text-center">{item.nama_menu}</td>
+                    <td className="py-3 px-6 text-center">{item.jenis}</td>
+                    <td className="py-3 px-6 text-center">{item.deskripsi}</td>
+                    <td className="py-3 px-6 text-center">{item.harga}</td>
+                    <td className="py-3 px-6 text-center flex justify-center gap-3">
+                      <button 
+                        className="bg-blue-900 text-white py-1 px-3 rounded hover:bg-blue-700"
+                        onClick={() => openEditModal(item)}
+                      >
+                        <CiEdit />
+                      </button>
+                      <button
+                        className="bg-red-900 text-white py-1 px-3 rounded hover:bg-red-700"
+                        onClick={() => handleDeleteMenu(item.id_menu)}
+                      >
+                        <AiFillDelete />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        {/* Pagination with Previous/Next buttons */}
         <Pagination 
           currentPage={currentPage} // Pass the current page to Pagination component
           ordersPerPage={ordersPerPage} 
