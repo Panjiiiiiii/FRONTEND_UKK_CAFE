@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getLocalStorage } from "@/lib/localStorage";
-
+import { Toaster, toast } from "react-hot-toast";
 const StatusModal = ({ id, onClose }) => {
   const [status, setStatus] = useState("belum_bayar"); // Default status
   const [message, setMessage] = useState("");
@@ -25,9 +25,12 @@ const StatusModal = ({ id, onClose }) => {
         }
       );
       setMessage(response.data.message);
+      toast.success("Status pembayaran berhasil diubah");
+      window.location.reload();
       onClose(); // Tutup modal setelah sukses
     } catch (error) {
       setMessage(error.response.data.message || "Terjadi kesalahan");
+      toast.error("Terjadi kesalahan");
     }
   };
 
@@ -38,6 +41,7 @@ const StatusModal = ({ id, onClose }) => {
       aria-hidden="true"
       className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
     >
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="relative p-4 w-full max-w-md max-h-full">
         <div className="relative bg-white rounded-lg shadow">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">

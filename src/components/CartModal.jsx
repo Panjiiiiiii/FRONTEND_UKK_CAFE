@@ -180,7 +180,6 @@ const CartModal = ({ onClose, id_cart }) => {
                 onClick={() => downloadPDF(cartId)}
               >
                 Create receipt
-                {/* // jika diklik juga akan download struk */}
               </button>
             </div>
           </div>

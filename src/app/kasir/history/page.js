@@ -5,6 +5,7 @@ import { getLocalStorage } from "@/lib/localStorage";
 import { MdOutlinePayments } from "react-icons/md";
 import StatusModal from "@/components/StatusModal"; // Pastikan Anda menyesuaikan import
 import Pagination from "@/components/Pagination";
+import { Toaster } from "react-hot-toast";
 
 const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
@@ -22,7 +23,8 @@ const Page = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    setOrders(response.data.data);
+    const sortedOrders = response.data.data.sort((a, b) => new Date(b.tgl_transaksi) - new Date(a.tgl_transaksi));
+    setOrders(sortedOrders);
   };
 
   useEffect(() => {
@@ -48,6 +50,8 @@ const Page = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
+            <Toaster />
+
       <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
         <h1 className="text-5xl font-bold mb-10 text-gray-800">Order History</h1>
 

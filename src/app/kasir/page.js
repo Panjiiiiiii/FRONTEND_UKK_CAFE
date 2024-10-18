@@ -5,11 +5,14 @@ import { getLocalStorage } from "@/lib/localStorage";
 import CardMenu from "@/components/CardMenu";
 import OrderModal from "@/components/OrderModal";
 import {Toaster, toast} from "react-hot-toast";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [menus, setMenus] = useState([]);
+  const params = useSearchParams();
+  console.log(params.id_cart)
   const [quantities, setQuantities] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,19 +72,18 @@ const Page = () => {
         },
       });
       console.log(response.data);
-      alert("Pesanan berhasil disimpan!");
+      toast.success("Pesanan berhasil disimpan.");
       setQuantities({});
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error submitting cart:", error);
-      alert("Gagal menyimpan pesanan.");
-    }
+      toast.error("Gagal menyimpan pesanan.");}
   };
 
   return (
     <div className="flex flex-col h-screen">
-      <toaster/>
-      <div className="p-8 bg-gray-100 overflow-y-auto rounded-md flex-grow lg:m-10">
+      <Toaster/>
+      <div className="p-8 bg-gray-100 overflow-y-auto rounded-md flex-grow lg:m-auto lg:mb-10">
         <main>
           {/* Sticky Header and Search */}
           <section className="sticky top-0 z-10 bg-white transition-shadow shadow-xl rounded-md mb-12 p-4 md:p-6">

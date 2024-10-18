@@ -8,8 +8,11 @@ import Link from "next/link";
 import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import CartModal from "@/components/CartModal"; // Pastikan CartModal diimport
+import { Toaster, toast } from "react-hot-toast";
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
+  const router = useRouter();
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [cart, setCart] = useState([]);
@@ -40,8 +43,32 @@ const Page = () => {
     setSelectedCartId(null);
   };
 
+  const handleDeleteCart = async (id) => {
+    try {
+      const url = `http://localhost:4000/cart/${id}`;
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if(response){
+        toast.success("Cart berhasil dihapus");
+        window.location.reload();
+        getCart();
+      }
+    } catch (error) {
+      toast.error("Gagal menghapus cart");
+    }
+  }
+
+  const handleEditCart = (cartItem) => {
+    // Redirect to order page with cart details as query parameters
+    router.push(`/kasir/?id_cart=${cartItem.id_cart}&id_user=${cartItem.id_user}&nomor_meja=${cartItem.meja.nomor_meja}&nama_pelanggan=${cartItem.nama_pelanggan}`);
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-center">
+      <Toaster />
       <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
         <h1 className="text-5xl font-bold text-gray-800 mb-10">Cart Items</h1>
         <div className="mt-5 flex justify-end">
@@ -91,10 +118,15 @@ const Page = () => {
                       >
                         <FaCartPlus />
                       </button>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition-colors">
+                      <button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition-colors"
+                      onClick={()=>handleEditCart(item)}>
                         <CiEdit />
                       </button>
-                      <button className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors">
+                      <button 
+                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors"
+                      onClick={()=>handleDeleteCart(item.id_cart)}
+                      >
                         <MdDelete />
                       </button>
                     </td>
