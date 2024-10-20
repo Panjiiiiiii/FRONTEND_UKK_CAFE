@@ -23,8 +23,13 @@ const Page = () => {
         },
       });
       const result = response.data.data;
-      setOrders(result);
-      setFilteredOrders(result); // Initially, all orders are shown
+
+      const sortedOrders = result.sort(
+        (a, b) => new Date(b.tgl_transaksi) - new Date(a.tgl_transaksi)
+      );
+
+      setOrders(sortedOrders);
+      setFilteredOrders(sortedOrders); // Initially, all orders are shown
     } catch (error) {
       console.error(error);
     }
@@ -34,15 +39,15 @@ const Page = () => {
     getOrders();
   }, []);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Filter orders by date range
   const handleFilter = () => {
     if (startDate && endDate) {
       const filtered = orders.filter((order) => {
         const orderDate = new Date(order.tgl_transaksi);
-        return orderDate >= new Date(startDate) && orderDate <= new Date(endDate);
+        return (
+          orderDate >= new Date(startDate) && orderDate <= new Date(endDate)
+        );
       });
       setFilteredOrders(filtered);
     } else {
@@ -51,20 +56,26 @@ const Page = () => {
     setCurrentPage(1); // Reset to first page after filtering
   };
 
-  // Get current orders
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-5">
-      <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-4xl font-bold mb-5 text-gray-800">Histori Transaksi</h1>
-        
+    <div className="p-4 md:p-8 min-h-screen flex justify-center items-center">
+      <div className="bg-white rounded-3xl shadow-lg w-full max-w-6xl p-4 md:p-8">
+        <h1 className="text-2xl md:text-4xl font-bold mb-4">
+          Histori Transaksi
+        </h1>
+
         {/* Date Range Filter */}
         <div className="flex flex-wrap justify-center items-center gap-4 my-6">
           <div>
-            <label className="block text-gray-700 font-bold mb-2">Start Date:</label>
+            <label className="block text-gray-700 font-bold mb-2">
+              Start Date:
+            </label>
             <input
               type="date"
               value={startDate}
@@ -73,7 +84,9 @@ const Page = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-bold mb-2">End Date:</label>
+            <label className="block text-gray-700 font-bold mb-2">
+              End Date:
+            </label>
             <input
               type="date"
               value={endDate}
@@ -104,30 +117,40 @@ const Page = () => {
 
         {/* Orders Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full mt-5 bg-white border-collapse">
+          <table className="table-auto w-full min-w-full border-collapse">
             <thead>
-              <tr className="bg-yellow-900 text-white text-[20px]">
-                <th className="py-3 px-6 text-center">ID Transaksi</th>
-                <th className="py-3 px-6 text-center">Tanggal Transaksi</th>
-                <th className="py-3 px-6 text-center">Nama Pelanggan</th>
-                <th className="py-3 px-6 text-center">Status Pemesanan</th>
-                <th className="py-3 px-6 text-center">Subtotal</th>
+              <tr className="bg-yellow-800 text-white text-left">
+                <th className="px-2 py-1">ID Transaksi</th>
+                <th className="px-2 py-1">Tanggal Transaksi</th>
+                <th className="px-2 py-1">Nama Kasir</th>
+                <th className="px-2 py-1">Nama Pelanggan</th>
+                <th className="px-2 py-1">Status</th>
+                <th className="px-2 py-1">Subtotal</th>
               </tr>
             </thead>
-            <tbody className="text-gray-600 text-[16px] font-semibold">
+            <tbody>
               {currentOrders.length > 0 ? (
                 currentOrders.map((item, index) => (
                   <tr
                     key={index}
-                    className="border-b border-gray-200 hover:bg-gray-100"
+                    className="hover:bg-gray-50 transition-colors"
                   >
-                    <td className="py-3 px-6 text-center">{item.id_transaksi}</td>
-                    <td className="py-3 px-6 text-center">
+                    <td className="border px-2 py-1 text-center">
+                      {item.id_transaksi}
+                    </td>
+                    <td className="border px-2 py-1 text-center">
                       {new Date(item.tgl_transaksi).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-6 text-center">{item.nama_pelanggan}</td>
-                    <td className="py-3 px-6 text-center">{item.status}</td>
-                    <td className="py-3 px-6 text-center">
+                    <td className="border px-2 py-1 text-center">
+                      {item.user.nama_user}
+                    </td>
+                    <td className="border px-2 py-1 text-center">
+                      {item.nama_pelanggan}
+                    </td>
+                    <td className="border px-2 py-1 text-center">
+                      {item.status}
+                    </td>
+                    <td className="border px-2 py-1 text-center">
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
                         currency: "IDR",
@@ -142,23 +165,25 @@ const Page = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center py-3">No orders found</td>
+                  <td colSpan="6" className="text-center py-3">
+                    No orders found
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-
         {/* Pagination Component */}
-        <div className="mt-8">
+        <div className="mt-8 flex justify-center">
           <Pagination
             ordersPerPage={ordersPerPage}
             totalOrders={filteredOrders.length}
             paginate={paginate}
             currentPage={currentPage}
+            style={{ display: "flex", justifyContent: "center" }}
           />
         </div>
-      </main>
+      </div>
     </div>
   );
 };

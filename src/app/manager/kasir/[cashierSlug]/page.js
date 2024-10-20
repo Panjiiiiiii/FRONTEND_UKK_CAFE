@@ -21,8 +21,13 @@ const CashierDetail = ({ params }) => {
         },
       });
       const result = response.data.data;
-      console.log(result);
-      setOrders(result);
+
+      // Sort orders by tgl_transaksi in descending order (newest first)
+      const sortedOrders = result.sort(
+        (a, b) => new Date(b.tgl_transaksi) - new Date(a.tgl_transaksi)
+      );
+
+      setOrders(sortedOrders);
 
       // Set cashierInfo from the result's user data
       if (result.length > 0) {
@@ -45,23 +50,23 @@ const CashierDetail = ({ params }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="p-8 min-h-screen flex justify-center items-center">
-      <div className="bg-white rounded-3xl shadow-lg w-full max-w-4xl p-8">
-        <h1 className="text-4xl font-bold mb-4">Detail Kasir</h1>
+    <div className="p-4 md:p-8 min-h-screen flex justify-center items-center">
+      <div className="bg-white rounded-3xl shadow-lg w-full max-w-4xl p-4 md:p-8">
+        <h1 className="text-2xl md:text-4xl font-bold mb-4">Detail Kasir</h1>
 
         {/* Display cashier info if available */}
         {cashierInfo && (
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold">{cashierInfo.nama_user}</h2>
+            <h2 className="text-xl md:text-2xl font-semibold">{cashierInfo.nama_user}</h2>
             <p className="text-gray-600">Email: {cashierInfo.email}</p>
             <p className="text-gray-600">Total Transaksi: {orders.length}</p>
           </div>
         )}
-        <h1 className="text-2xl font-semibold mb-4">Histori Transaksi</h1>
+        <h1 className="text-lg md:text-2xl font-semibold mb-4">Histori Transaksi</h1>
 
         {/* Table for displaying transactions */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto"> {/* Make table scrollable horizontally */}
             <table className="table-auto w-full min-w-full">
               <thead>
                 <tr className="bg-yellow-800 text-white text-left">
@@ -87,7 +92,10 @@ const CashierDetail = ({ params }) => {
                       {item.Detail_transaksi.reduce(
                         (total, detail) => total + detail.total_harga,
                         0
-                      )}
+                      ).toLocaleString('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                      })}
                     </td>
                   </tr>
                 ))}
