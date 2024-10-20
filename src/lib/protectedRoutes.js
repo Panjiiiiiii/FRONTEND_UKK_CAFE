@@ -14,7 +14,7 @@ const ProtectedRoutes = ({ children, expectedRole }) => {
     try {
       const parsedData = JSON.parse(dataUser);
       token = parsedData.token;
-      role = parsedData.role; // Get the role from the parsed data
+      role = parsedData.data.role; 
     } catch (error) {
       console.error("Failed to parse user data:", error);
     }
@@ -23,7 +23,7 @@ const ProtectedRoutes = ({ children, expectedRole }) => {
   useEffect(() => {
     // Check if token exists and if the role matches the expected role
     if (!token || role !== expectedRole) {
-      router.push("/"); // Redirect to login if token is missing or role does not match
+      router.push("/"); // Redirect to login if token or role is invalid
     } else {
       setIsLoading(false); // Set loading to false only if token and role are valid
     }
