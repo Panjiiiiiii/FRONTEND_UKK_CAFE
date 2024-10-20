@@ -5,14 +5,17 @@ import { MdOutlineLogout, MdMenu, MdArrowBack } from "react-icons/md";
 import Link from "next/link";
 import "../app/global.css";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { deleteLocalStorage } from "@/lib/localStorage";
+import ModalLogout from "./ModalLogout";
 
 function SideNavbar({ children, title, navItems }) {
   const [isOpen, setIsOpen] = useState(true); // State untuk mengontrol apakah sidebar terbuka atau tertutup
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    deleteLocalStorage("data_user");
+  // Trigger the logout modal
+  const handleLogoutClick = () => {
+    setLogoutModalOpen(true);
   };
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Mengubah state untuk collapse/expand sidebar
@@ -65,23 +68,21 @@ function SideNavbar({ children, title, navItems }) {
           <div className="mt-auto w-full">
             <div className="flex justify-start items-center gap-4 pl-5 border border-gray-200 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg w-full">
               <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white" />
-              <Link
+              <button
                 className="text-base text-gray-800 group-hover:text-white font-semibold w-full"
-                onClick={handleLogout}
+                onClick={()=>handleLogoutClick()}
                 href="/"
               >
                 Logout
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Sidebar Toggle Button (Mobile View) */}
       <button
         className="absolute top-5 left-5 lg:hidden bg-yellow-900 text-white p-2 rounded-md"
         onClick={toggleSidebar}
-      >
+        >
         <RxHamburgerMenu className="text-2xl" />
       </button>
 
@@ -89,6 +90,7 @@ function SideNavbar({ children, title, navItems }) {
       <div className={`w-full h-screen bg-yellow-800 overflow-hidden p-5 ${isOpen ? 'lg:ml-60' : 'lg:ml-0'}`}>
         {children}
       </div>
+      {isLogoutModalOpen && <ModalLogout onClose={() => setLogoutModalOpen(false)} />}
     </div>
   );
 }

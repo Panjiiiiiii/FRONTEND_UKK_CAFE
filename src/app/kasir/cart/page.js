@@ -4,20 +4,21 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { getLocalStorage } from "@/lib/localStorage";
 import { FaCartPlus } from "react-icons/fa";
-import Link from "next/link";
 import { MdDelete } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
-import CartModal from "@/components/CartModal"; // Pastikan CartModal diimport
 import { Toaster, toast } from "react-hot-toast";
-import { useRouter } from 'next/navigation';
+import CartModal from "@/components/CartModal"; // Ensure CartModal is imported
+import Pagination from "@/components/Pagination"; // Import Pagination component
+import { BsFillPersonLinesFill, BsPerson, BsPersonFill } from "react-icons/bs"; // Icon for cart items
+import Link from "next/link";
 
 const Page = () => {
-  const router = useRouter();
   const dataUser = getLocalStorage(`data_user`);
   const token = JSON.parse(dataUser).token;
   const [cart, setCart] = useState([]);
-  const [modal, setModal] = useState(false); // State untuk modal
   const [selectedCartId, setSelectedCartId] = useState(null);
+  const [modal, setModal] = useState(false); // State for modal
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3); // Adjust items per page as needed
 
   const getCart = async () => {
     const url = "http://localhost:4000/cart/";
@@ -51,26 +52,27 @@ const Page = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if(response){
+      if (response) {
         toast.success("Cart berhasil dihapus");
-        window.location.reload();
-        getCart();
+        window.location.reload(); // Refresh page
+        getCart(); // Refresh cart
       }
     } catch (error) {
       toast.error("Gagal menghapus cart");
     }
-  }
-
-  const handleEditCart = (cartItem) => {
-    // Redirect to order page with cart details as query parameters
-    router.push(`/kasir/?id_cart=${cartItem.id_cart}&id_user=${cartItem.id_user}&nomor_meja=${cartItem.meja.nomor_meja}&nama_pelanggan=${cartItem.nama_pelanggan}`);
   };
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = cart.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex flex-col justify-center items-center">
       <Toaster />
       <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-5xl font-bold text-gray-800 mb-10">Cart Items</h1>
+        <h1 className="text-5xl font-bold text-yellow-800 mb-10">Cart Items</h1>
         <div className="mt-5 flex justify-end">
           <Link href="/kasir/">
             <button className="flex items-center bg-green-700 hover:bg-green-800 text-white text-md p-3 rounded-md font-bold transition-colors">
@@ -86,58 +88,44 @@ const Page = () => {
             No items in cart
           </p>
         ) : (
-          <div className="overflow-x-auto mt-10">
-            <table className="w-full bg-gray-100 shadow-lg rounded-xl border-separate border-spacing-y-2 border-spacing-x-0">
-              <thead>
-                <tr className="bg-yellow-900 text-white text-[20px] leading-normal rounded-t-xl">
-                  <th className="py-3 px-6 text-center">ID cart</th>
-                  <th className="py-3 px-6 text-center">ID kasir</th>
-                  <th className="py-3 px-6 text-center">Nomor meja</th>
-                  <th className="py-3 px-6 text-center">Nama Pelanggan</th>
-                  <th className="py-3 px-6 text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-[16px] font-semibold">
-                {cart.map((item) => (
-                  <tr
-                    key={item.id_cart}
-                    className="bg-white hover:bg-gray-200 border-b border-gray-200 transition-all"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+            {currentItems.map((item) => (
+              <div key={item.id_cart} className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow flex flex-col">
+                <div className="flex items-center mb-4">
+                  <BsPersonFill className="text-yellow-800 mr-2" size={30} />
+                  <h2 className="text-xl font-bold text-yellow-800">ID Cart: {item.id_cart}</h2>
+                </div>
+                <p className="text-yellow-800 mb-2 text-left font-semibold">Nomor Meja: {item.meja.nomor_meja}</p>
+                <p className="text-yellow-800 mb-4 text-left font-semibold">Nama Pelanggan: {item.nama_pelanggan}</p>
+                <div className="mt-auto flex justify-left gap-2">
+                  <button
+                    className="bg-yellow-700 hover:bg-yellow-800 text-white py-1 px-3 rounded transition-colors"
+                    onClick={() => openModal(item.id_cart)}
                   >
-                    <td className="py-3 px-6 text-center">{item.id_cart}</td>
-                    <td className="py-3 px-6 text-center">{item.id_user}</td>
-                    <td className="py-3 px-6 text-center">
-                      {item.meja.nomor_meja}
-                    </td>
-                    <td className="py-3 px-6 text-center">
-                      {item.nama_pelanggan}
-                    </td>
-                    <td className="py-3 px-6 text-center flex justify-center gap-3">
-                      <button
-                        className="bg-green-700 hover:bg-green-800 text-white py-1 px-3 rounded transition-colors"
-                        onClick={() => openModal(item.id_cart)}
-                      >
-                        <FaCartPlus />
-                      </button>
-                      <button 
-                      className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded transition-colors"
-                      onClick={()=>handleEditCart(item)}>
-                        <CiEdit />
-                      </button>
-                      <button 
-                      className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded transition-colors"
-                      onClick={()=>handleDeleteCart(item.id_cart)}
-                      >
-                        <MdDelete />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    <FaCartPlus />
+                  </button>
+                  <button
+                    className="bg-yellow-700 hover:bg-yellow-800 text-white py-1 px-3 rounded transition-colors"
+                    onClick={() => handleDeleteCart(item.id_cart)}
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
-      </main>
 
+        {/* Pagination Component */}
+        <div className="mt-8">
+          <Pagination
+            ordersPerPage={itemsPerPage}
+            totalOrders={cart.length}
+            paginate={paginate}
+            currentPage={currentPage} // Pass current page for pagination
+          />
+        </div>
+      </main>
       {modal && <CartModal onClose={closeModal} id_cart={selectedCartId} />}
     </div>
   );

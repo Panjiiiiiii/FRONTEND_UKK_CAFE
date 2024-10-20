@@ -37,7 +37,6 @@ const UserPage = () => {
         },
       });
       setUsers(response.data.data);
-      toast.success("Data pengguna berhasil dimuat!"); // Toast on successful load
     } catch (error) {
       console.error(error);
       toast.error("Gagal memuat data pengguna."); // Toast on error
@@ -71,19 +70,24 @@ const UserPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // Update user dalam state tanpa refresh
-        setUsers(users.map((u) => (u.id_user === user.id_user ? user : u)));
+        // Update user in state and move to the top
+        setUsers((prevUsers) => {
+          const updatedUsers = prevUsers.map((u) =>
+            u.id_user === user.id_user ? user : u
+          );
+          return [user, ...updatedUsers.filter((u) => u.id_user !== user.id_user)];
+        });
         toast.success("Pengguna berhasil diperbarui!"); // Toast on successful edit
       } else {
-        // Tambah user baru
+        // Add new user
         const urlAdd = "http://localhost:4000/user/add";
         const response = await axios.post(urlAdd, user, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        // Tambah user baru dalam state
-        setUsers([...users, response.data.data]);
+        // Add new user at the top of the state
+        setUsers((prevUsers) => [response.data.data, ...prevUsers]);
         toast.success("Pengguna berhasil ditambahkan!"); // Toast on successful add
       }
       setShowModal(false);
@@ -92,6 +96,7 @@ const UserPage = () => {
       toast.error("Gagal menyimpan data pengguna."); // Toast on error
     }
   };
+  
 
   const openEditModal = (user) => {
     setSelectedUser(user);
@@ -105,7 +110,7 @@ const UserPage = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       <main className="w-full max-w-6xl text-center bg-white p-5 rounded-3xl shadow-2xl flex flex-col">
         <h1 className="text-3xl md:text-5xl font-bold mb-6 text-gray-800">User Page</h1>
         <div className="mt-5 flex justify-end">

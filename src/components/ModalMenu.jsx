@@ -78,6 +78,7 @@ const Modal = ({ onClose, menu, isEdit }) => {
         },
       });
       toast.success(isEdit ? "Menu berhasil diupdate!" : "Menu berhasil ditambahkan!");
+      window.location.reload();
       onClose();
     } catch (error) {
       toast.error("Gagal menyimpan data menu.");

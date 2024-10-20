@@ -31,6 +31,7 @@ const Modal = ({ onClose }) => {
       });
       console.log(response.data);
       toast.success("Meja berhasil ditambahkan!");
+      window.location.reload();
       onClose();
     } catch (error) {
       console.error(error);

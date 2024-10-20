@@ -53,7 +53,7 @@ const Page = () => {
             <Toaster />
 
       <main className="w-full max-w-6xl text-center bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-5xl font-bold mb-10 text-gray-800">Order History</h1>
+        <h1 className="text-5xl font-bold mb-10 text-yellow-800">Order History</h1>
 
         {/* Table container */}
         <div className="overflow-x-auto mt-5">

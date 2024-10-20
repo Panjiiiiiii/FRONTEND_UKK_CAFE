@@ -28,7 +28,6 @@ const TablePage = () => {
         },
       });
       setTables(response.data.data);
-      toast.success("Data meja berhasil dimuat!"); // Toast on successful load
     } catch (error) {
       console.error(error);
       toast.error("Gagal memuat data meja."); // Toast on error

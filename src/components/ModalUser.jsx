@@ -60,7 +60,8 @@ const Modal = ({ onClose, user, isEdit }) => {
         },
       });
       console.log(response.data);
-      toast.success(isEdit ? "User updated successfully!" : "User added successfully!"); // Success toast
+      toast.success(isEdit ? "User berhasil diupdate !" : "User berhasil ditambahkan !"); // Success toast
+      window.location.reload(); // Reload page
       onClose();
     } catch (error) {
       console.error(error);
