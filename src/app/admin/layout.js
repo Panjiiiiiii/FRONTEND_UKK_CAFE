@@ -9,6 +9,7 @@ import {
 import { IoMdPerson } from "react-icons/io";
 import { IoFastFoodOutline } from "react-icons/io5";
 import SideNavbar from "@/components/Navbar"; // Path sesuai dengan struktur proyek Anda
+import ProtectedRoutes from "@/lib/protectedRoutes";
 
 function AdminLayout({ children }) {
   const navItems = [
@@ -18,7 +19,15 @@ function AdminLayout({ children }) {
     { label: "Edit Menu", href: "/admin/menu", icon: IoFastFoodOutline },
   ];
 
-  return <SideNavbar title="Admin" navItems={navItems}>{children}</SideNavbar>;
+  return (
+    <>    
+    <ProtectedRoutes expectedRole="ADMIN">
+      <SideNavbar title="Admin" navItems={navItems}>
+        {children}
+      </SideNavbar>
+    </ProtectedRoutes>
+    </>
+  );
 }
 
 export default AdminLayout;
