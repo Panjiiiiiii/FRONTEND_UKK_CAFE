@@ -29,7 +29,6 @@ const MenuPage = () => {
         },
       });
       setMenus(response.data.data); // Set the menu data
-      toast.success("Menu data loaded successfully!"); // Toast on successful load
     } catch (error) {
       console.error(error);
       toast.error("Failed to load menu data."); // Toast on error

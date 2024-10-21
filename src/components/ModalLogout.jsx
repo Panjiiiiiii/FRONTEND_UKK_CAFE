@@ -11,7 +11,6 @@ const ModalLogout = ({ onClose }) => {
     toast.success("Berhasil logout");
     window.location.reload();
     window.location.href = "/";
-    onclose();
   };
   return (
     <div
@@ -66,7 +65,7 @@ const ModalLogout = ({ onClose }) => {
                 Logout
               </button>
               <button
-                onClick={onClose}
+                onClick={()=>onClose()}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg text-sm px-5 py-2.5"
               >
                 Cancel

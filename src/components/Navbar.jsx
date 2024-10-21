@@ -16,7 +16,6 @@ function SideNavbar({ children, title, navItems }) {
     setLogoutModalOpen(true);
   };
 
-
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Mengubah state untuk collapse/expand sidebar
   };
@@ -49,18 +48,14 @@ function SideNavbar({ children, title, navItems }) {
           {/* Navigation Items */}
           <div className="my-4 border-b border-gray-100 pb-4 w-full">
             {navItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-yellow-900 p-2 rounded-md group cursor-pointer hover:shadow-lg w-full"
-              >
-                <item.icon className="text-2xl text-yellow-900 group-hover:text-white" />
-                <Link
-                  className="text-base text-yellow-900 group-hover:text-white font-semibold w-full"
-                  href={item.href}
-                >
-                  {item.label}
-                </Link>
-              </div>
+              <Link href={item.href} key={index}>
+                <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-yellow-900 p-2 rounded-md group cursor-pointer hover:shadow-lg w-full">
+                  <item.icon className="text-2xl text-yellow-900 group-hover:text-white" />
+                  <p className="text-base text-yellow-900 group-hover:text-white font-semibold w-full">
+                    {item.label}
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
 
@@ -70,7 +65,7 @@ function SideNavbar({ children, title, navItems }) {
               <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white" />
               <button
                 className="text-base text-gray-800 group-hover:text-white font-semibold w-full"
-                onClick={()=>handleLogoutClick()}
+                onClick={() => handleLogoutClick()}
                 href="/"
               >
                 Logout
@@ -82,15 +77,21 @@ function SideNavbar({ children, title, navItems }) {
       <button
         className="absolute top-5 left-5 lg:hidden bg-yellow-900 text-white p-2 rounded-md"
         onClick={toggleSidebar}
-        >
+      >
         <RxHamburgerMenu className="text-2xl" />
       </button>
 
       {/* Content Area */}
-      <div className={`w-full h-screen bg-yellow-800 overflow-hidden p-5 ${isOpen ? 'lg:ml-60' : 'lg:ml-0'}`}>
+      <div
+        className={`w-full h-screen bg-yellow-800 overflow-hidden p-5 ${
+          isOpen ? "lg:ml-60" : "lg:ml-0"
+        }`}
+      >
         {children}
       </div>
-      {isLogoutModalOpen && <ModalLogout onClose={() => setLogoutModalOpen(false)} />}
+      {isLogoutModalOpen && (
+        <ModalLogout onClose={() => setLogoutModalOpen(false)} />
+      )}
     </div>
   );
 }
